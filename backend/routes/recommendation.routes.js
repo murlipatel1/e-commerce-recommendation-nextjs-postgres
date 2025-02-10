@@ -1,8 +1,8 @@
-const express = require("express");
-const pool = require("../config/db");
-const { authenticateToken } = require("../middlewares/authMiddleware");
+import { Router } from "express";
+import pool from "../config/db";
+import { authenticateToken } from "../middlewares/authMiddleware";
 
-const router = express.Router();
+const router = Router();
 
 // Get Recommended Products for a User
 router.get("/", authenticateToken, async (req, res) => {
@@ -17,4 +17,4 @@ router.get("/", authenticateToken, async (req, res) => {
     }
 });
 
-module.exports = router;
+export default router;

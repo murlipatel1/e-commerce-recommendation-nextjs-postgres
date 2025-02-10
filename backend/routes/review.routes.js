@@ -1,8 +1,8 @@
-const express = require("express");
-const pool = require("../config/db");
-const { authenticateToken } = require("../middleware/auth.middleware");
+import { Router } from "express";
+import pool from "../config/db";
+import { authenticateToken } from "../middleware/auth.middleware";
 
-const router = express.Router();
+const router = Router();
 
 // Add Review
 router.post("/", authenticateToken, async (req, res) => {
@@ -19,4 +19,4 @@ router.post("/", authenticateToken, async (req, res) => {
     }
 });
 
-module.exports = router;
+export default router;

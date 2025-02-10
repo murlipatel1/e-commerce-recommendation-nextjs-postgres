@@ -1,8 +1,8 @@
-const express = require("express");
-const pool = require("../config/db");
-const { authenticateToken } = require("../middlewares/auth.middleware");
+import { Router } from "express";
+import pool from "../config/db";
+import { authenticateToken } from "../middlewares/auth.middleware";
 
-const router = express.Router();
+const router = Router();
 
 // Create Product (Admin only)
 router.post("/", authenticateToken, async (req, res) => {
@@ -55,4 +55,4 @@ router.delete("/:id", authenticateToken, async (req, res) => {
     }
 });
 
-module.exports = router;
+export default router;

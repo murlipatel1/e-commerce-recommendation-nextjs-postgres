@@ -1,22 +1,22 @@
-const express = require("express");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const pool = require("../config/db");
-const router = express.Router();
+import { Router } from "express";
+import { hash, compare } from "bcryptjs";
+import { sign, verify } from "jsonwebtoken";
+import pool from "../config/db";
+const router = Router();
 
 const generateAccessToken = (user) => {
-    return jwt.sign({ id: user.id, email: user.email, role: user.role }, process.env.JWT_SECRET, { expiresIn: "15m" });
+    return sign({ id: user.id, email: user.email, role: user.role }, process.env.JWT_SECRET, { expiresIn: "15m" });
 };
 
 const generateRefreshToken = (user) => {
-    return jwt.sign({ id: user.id }, process.env.REFRESH_SECRET, { expiresIn: "7d" });
+    return sign({ id: user.id }, process.env.REFRESH_SECRET, { expiresIn: "7d" });
 };
 
 // Register User
 router.post("/register", async (req, res) => {
     try {
         const { name, email, password, role } = req.body;
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const hashedPassword = await hash(password, 10);
         const result = await pool.query("INSERT INTO users (name, email, password, role) VALUES ($1, $2, $3, $4) RETURNING id, name, email, role", 
             [name, email, hashedPassword, role || 'user']);
 
@@ -35,7 +35,7 @@ router.post("/login", async (req, res) => {
         if (result.rows.length === 0) return res.status(401).json({ message: "Invalid credentials" });
 
         const user = result.rows[0];
-        const isMatch = await bcrypt.compare(password, user.password);
+        const isMatch = await compare(password, user.password);
 
         if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
 
@@ -64,7 +64,7 @@ router.post("/refresh", async (req, res) => {
         const result = await pool.query("SELECT * FROM refresh_tokens WHERE token = $1", [refreshToken]);
         if (result.rows.length === 0) return res.status(403).json({ message: "Invalid refresh token" });
 
-        jwt.verify(refreshToken, process.env.REFRESH_SECRET, (err, user) => {
+        verify(refreshToken, process.env.REFRESH_SECRET, (err, user) => {
             if (err) return res.status(403).json({ message: "Invalid refresh token" });
 
             const newAccessToken = generateAccessToken(user);
@@ -85,4 +85,4 @@ router.post("/logout", async (req, res) => {
     res.json({ message: "Logged out successfully" });
 });
 
-module.exports = router;
+export default router;
