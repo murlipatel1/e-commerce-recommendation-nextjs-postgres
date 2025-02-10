@@ -5,7 +5,7 @@ import pool from "../config/db";
 const router = Router();
 
 const generateAccessToken = (user) => {
-    return sign({ id: user.id, email: user.email, role: user.role }, process.env.JWT_SECRET, { expiresIn: "15m" });
+    return sign({ id: user.id, email: user.email, role: user.role }, process.env.JWT_SECRET, { expiresIn: "1d" });
 };
 
 const generateRefreshToken = (user) => {
