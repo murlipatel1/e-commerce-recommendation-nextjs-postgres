@@ -62,10 +62,6 @@ router.post("/login" ,async (req, res) => {
         // res.cookie("refreshToken", refreshToken, { httpOnly: true, secure: true });
         res.cookie("refreshToken", refreshToken);
 
-        // add localstorage acess token and refresh token
-        // localStorage.setItem('accessToken', accessToken);
-        // localStorage.setItem('refreshToken', refreshToken);
-
         // add user object to cookie
         res.cookie("user", user);
         res.json({ accessToken, refreshToken });
@@ -110,9 +106,6 @@ router.post("/logout", async (req, res) => {
     res.clearCookie("refreshToken");
     res.clearCookie("user");
 
-    // remove localstorage access token and refresh token
-    // localStorage.removeItem('accessToken');
-    // localStorage.removeItem('refreshToken');
     res.json({ message: "Logged out successfully" });
 });
 

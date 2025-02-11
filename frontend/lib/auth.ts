@@ -1,4 +1,3 @@
-// lib/auth.ts
 import api from './api';
 import { AuthResponse, LoginData, Order, Product, Recommendation, RegisterData, Review } from '@/types';
 
