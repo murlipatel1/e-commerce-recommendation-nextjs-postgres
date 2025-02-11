@@ -2,6 +2,7 @@ const { Router } = require("express");
 const { hash, compare } = require("bcryptjs");
 const { sign, verify } = require("jsonwebtoken");
 const sequelize = require("../config/db.js");
+const {Cookies} =require('js-cookie');
 
 const router = Router();
 
@@ -33,7 +34,7 @@ router.post("/register", async (req, res) => {
 });
 
 // Login User
-router.post("/login", async (req, res) => {
+router.post("/login" ,async (req, res) => {
     try {
         const { email, password } = req.body;
         const result = await sequelize.query("SELECT * FROM users WHERE email = $1", {
@@ -56,9 +57,17 @@ router.post("/login", async (req, res) => {
             type: sequelize.QueryTypes.INSERT
         });
 
-        res.cookie("accessToken", accessToken, { httpOnly: true, secure: true });
-        res.cookie("refreshToken", refreshToken, { httpOnly: true, secure: true });
+        // res.cookie("accessToken", accessToken, { httpOnly: true, secure: true });
+        res.cookie("accessToken", accessToken);
+        // res.cookie("refreshToken", refreshToken, { httpOnly: true, secure: true });
+        res.cookie("refreshToken", refreshToken);
 
+        // add localstorage acess token and refresh token
+        // localStorage.setItem('accessToken', accessToken);
+        // localStorage.setItem('refreshToken', refreshToken);
+
+        // add user object to cookie
+        res.cookie("user", user);
         res.json({ accessToken, refreshToken });
     } catch (error) {
         res.status(500).json({ message: "Error logging in", error: error.message });
@@ -91,7 +100,7 @@ router.post("/refresh", async (req, res) => {
 
 // Logout User
 router.post("/logout", async (req, res) => {
-    const { refreshToken } = req.body;
+    const { refreshToken } = req.cookies;
     await sequelize.query("DELETE FROM refresh_tokens WHERE token = $1", {
         bind: [refreshToken],
         type: sequelize.QueryTypes.DELETE
@@ -99,6 +108,11 @@ router.post("/logout", async (req, res) => {
 
     res.clearCookie("accessToken");
     res.clearCookie("refreshToken");
+    res.clearCookie("user");
+
+    // remove localstorage access token and refresh token
+    // localStorage.removeItem('accessToken');
+    // localStorage.removeItem('refreshToken');
     res.json({ message: "Logged out successfully" });
 });
 

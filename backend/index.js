@@ -9,12 +9,18 @@ const orderRoutes = require("./routes/order.routes.js");
 const reviewRoutes = require("./routes/review.routes.js");
 const recommendationRoutes = require("./routes/recommendation.routes.js");
 
+
 config();
 const app = express();
 
 app.use(json());
 app.use(cookieParser());
-app.use(cors());
+app.use(cors(
+    {
+        origin: "http://localhost:3000",
+        credentials: true,
+    }
+));
 
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/products", productRoutes);
