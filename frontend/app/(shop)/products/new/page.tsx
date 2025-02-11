@@ -16,9 +16,8 @@ export default function NewProductPage() {
     try {
       await createProduct({ name, description, price, stock, category });
       router.push('/products');
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      if (err instanceof Error) setError(err.message);
     }
   };
 

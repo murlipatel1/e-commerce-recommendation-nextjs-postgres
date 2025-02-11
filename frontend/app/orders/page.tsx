@@ -18,9 +18,10 @@ export default function OrdersPage() {
       const data = await getOrders();
       setOrders(data);
       
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
+    } catch (err) {
+      if (err instanceof Error) {
       setError(err.message);
+      }
     } finally {
       setLoading(false);
     }

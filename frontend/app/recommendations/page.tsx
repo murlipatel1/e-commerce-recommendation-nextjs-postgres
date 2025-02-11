@@ -17,9 +17,11 @@ export default function RecommendationsPage() {
     try {
       const data = await getRecommendations();
       setRecommendations(data);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
+   
+    } catch (err) {
+      if (err instanceof Error) {
       setError(err.message);
+      }
     } finally {
       setLoading(false);
     }

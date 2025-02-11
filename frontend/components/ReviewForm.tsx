@@ -26,9 +26,9 @@ export default function ReviewForm({ productId, onReviewSubmitted }: ReviewFormP
       setComment('');
       setRating(5);
       onReviewSubmitted();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      setError(err.message);
+   
+    } catch (err) {
+      if (err instanceof Error) setError(err.message);
     } finally {
       setLoading(false);
     }

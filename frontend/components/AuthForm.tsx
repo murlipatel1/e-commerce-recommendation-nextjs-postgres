@@ -5,6 +5,14 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { LoginData, RegisterData } from '@/types';
 
+interface CustomError extends Error {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+}
+
 export default function AuthForm({ mode }: { mode: 'login' | 'register' }) {
   const router = useRouter();
   const { login, register } = useAuth();
@@ -26,9 +34,9 @@ export default function AuthForm({ mode }: { mode: 'login' | 'register' }) {
         await register(data as unknown as RegisterData);
       }
       router.push('/products');
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'An error occurred');
+    } catch (error) {
+      const err = error as CustomError;
+      setError(err.response?.data?.message || err.message || 'An error occurred');
     } finally {
       setLoading(false);
     }
