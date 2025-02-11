@@ -1,7 +1,8 @@
-import { Router } from "express";
-import { hash, compare } from "bcryptjs";
-import { sign, verify } from "jsonwebtoken";
-import pool from "../config/db";
+const { Router } = require("express");
+const { hash, compare } = require("bcryptjs");
+const { sign, verify } = require("jsonwebtoken");
+const sequelize = require("../config/db.js");
+
 const router = Router();
 
 const generateAccessToken = (user) => {
@@ -17,10 +18,15 @@ router.post("/register", async (req, res) => {
     try {
         const { name, email, password, role } = req.body;
         const hashedPassword = await hash(password, 10);
-        const result = await pool.query("INSERT INTO users (name, email, password, role) VALUES ($1, $2, $3, $4) RETURNING id, name, email, role", 
-            [name, email, hashedPassword, role || 'user']);
+        const result = await sequelize.query(
+            "INSERT INTO users (name, email, password, role) VALUES ($1, $2, $3, $4) RETURNING id, name, email, role",
+            {
+                bind: [name, email, hashedPassword, role || 'user'],
+                type: sequelize.QueryTypes.INSERT
+            }
+        );
 
-        res.status(201).json({ message: "User registered", user: result.rows[0] });
+        res.status(201).json({ message: "User registered", user: result[0] });
     } catch (error) {
         res.status(500).json({ message: "Error registering user", error: error.message });
     }
@@ -30,11 +36,14 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
     try {
         const { email, password } = req.body;
-        const result = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
+        const result = await sequelize.query("SELECT * FROM users WHERE email = $1", {
+            bind: [email],
+            type: sequelize.QueryTypes.SELECT
+        });
 
-        if (result.rows.length === 0) return res.status(401).json({ message: "Invalid credentials" });
+        if (result.length === 0) return res.status(401).json({ message: "Invalid credentials" });
 
-        const user = result.rows[0];
+        const user = result[0];
         const isMatch = await compare(password, user.password);
 
         if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
@@ -42,8 +51,10 @@ router.post("/login", async (req, res) => {
         const accessToken = generateAccessToken(user);
         const refreshToken = generateRefreshToken(user);
 
-        await pool.query("INSERT INTO refresh_tokens (user_id, token, expires_at) VALUES ($1, $2, NOW() + INTERVAL '7 days')", 
-            [user.id, refreshToken]);
+        await sequelize.query("INSERT INTO refresh_tokens (user_id, token, expires_at) VALUES ($1, $2, NOW() + INTERVAL '7 days')", {
+            bind: [user.id, refreshToken],
+            type: sequelize.QueryTypes.INSERT
+        });
 
         res.cookie("accessToken", accessToken, { httpOnly: true, secure: true });
         res.cookie("refreshToken", refreshToken, { httpOnly: true, secure: true });
@@ -61,8 +72,11 @@ router.post("/refresh", async (req, res) => {
     if (!refreshToken) return res.status(403).json({ message: "Refresh token required" });
 
     try {
-        const result = await pool.query("SELECT * FROM refresh_tokens WHERE token = $1", [refreshToken]);
-        if (result.rows.length === 0) return res.status(403).json({ message: "Invalid refresh token" });
+        const result = await sequelize.query("SELECT * FROM refresh_tokens WHERE token = $1", {
+            bind: [refreshToken],
+            type: sequelize.QueryTypes.SELECT
+        });
+        if (result.length === 0) return res.status(403).json({ message: "Invalid refresh token" });
 
         verify(refreshToken, process.env.REFRESH_SECRET, (err, user) => {
             if (err) return res.status(403).json({ message: "Invalid refresh token" });
@@ -78,11 +92,14 @@ router.post("/refresh", async (req, res) => {
 // Logout User
 router.post("/logout", async (req, res) => {
     const { refreshToken } = req.body;
-    await pool.query("DELETE FROM refresh_tokens WHERE token = $1", [refreshToken]);
+    await sequelize.query("DELETE FROM refresh_tokens WHERE token = $1", {
+        bind: [refreshToken],
+        type: sequelize.QueryTypes.DELETE
+    });
 
     res.clearCookie("accessToken");
     res.clearCookie("refreshToken");
     res.json({ message: "Logged out successfully" });
 });
 
-export default router;
+module.exports = router;

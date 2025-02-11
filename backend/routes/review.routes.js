@@ -1,6 +1,6 @@
-import { Router } from "express";
-import pool from "../config/db";
-import { authenticateToken } from "../middleware/auth.middleware";
+const { Router } = require("express");
+const sequelize = require("../config/db.js");
+const authenticateToken = require("../middleware/auth.middleware.js");
 
 const router = Router();
 
@@ -9,14 +9,17 @@ router.post("/", authenticateToken, async (req, res) => {
     const { product_id, rating, comment } = req.body;
 
     try {
-        const result = await pool.query(
+        const result = await sequelize.query(
             "INSERT INTO reviews (user_id, product_id, rating, comment) VALUES ($1, $2, $3, $4) RETURNING *",
-            [req.user.id, product_id, rating, comment]
+            {
+                bind: [req.user.id, product_id, rating, comment],
+                type: sequelize.QueryTypes.INSERT
+            }
         );
-        res.status(201).json(result.rows[0]);
+        res.status(201).json(result[0]);
     } catch (error) {
         res.status(500).json({ message: "Error adding review", error: error.message });
     }
 });
 
-export default router;
+module.exports = router;

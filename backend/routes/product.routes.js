@@ -1,6 +1,6 @@
-import { Router } from "express";
-import pool from "../config/db";
-import { authenticateToken } from "../middlewares/auth.middleware";
+const { Router } = require("express");
+const sequelize = require("../config/db.js");
+const authenticateToken = require("../middleware/auth.middleware.js");
 
 const router = Router();
 
@@ -11,11 +11,14 @@ router.post("/", authenticateToken, async (req, res) => {
     const { name, description, price, stock, category } = req.body;
 
     try {
-        const result = await pool.query(
+        const result = await sequelize.query(
             "INSERT INTO products (name, description, price, stock, category) VALUES ($1, $2, $3, $4, $5) RETURNING *",
-            [name, description, price, stock, category]
+            {
+                bind: [name, description, price, stock, category],
+                type: sequelize.QueryTypes.INSERT
+            }
         );
-        res.status(201).json(result.rows[0]);
+        res.status(201).json(result[0]);
     } catch (error) {
         res.status(500).json({ message: "Error adding product", error: error.message });
     }
@@ -24,8 +27,10 @@ router.post("/", authenticateToken, async (req, res) => {
 // Get All Products
 router.get("/", async (req, res) => {
     try {
-        const result = await pool.query("SELECT * FROM products");
-        res.json(result.rows);
+        const result = await sequelize.query("SELECT * FROM products", {
+            type: sequelize.QueryTypes.SELECT
+        });
+        res.json(result);
     } catch (error) {
         res.status(500).json({ message: "Error fetching products", error: error.message });
     }
@@ -34,10 +39,13 @@ router.get("/", async (req, res) => {
 // Get Product by ID
 router.get("/:id", async (req, res) => {
     try {
-        const result = await pool.query("SELECT * FROM products WHERE id = $1", [req.params.id]);
-        if (result.rows.length === 0) return res.status(404).json({ message: "Product not found" });
+        const result = await sequelize.query("SELECT * FROM products WHERE id = $1", {
+            bind: [req.params.id],
+            type: sequelize.QueryTypes.SELECT
+        });
+        if (result.length === 0) return res.status(404).json({ message: "Product not found" });
 
-        res.json(result.rows[0]);
+        res.json(result[0]);
     } catch (error) {
         res.status(500).json({ message: "Error fetching product", error: error.message });
     }
@@ -48,11 +56,14 @@ router.delete("/:id", authenticateToken, async (req, res) => {
     if (req.user.role !== "admin") return res.status(403).json({ message: "Unauthorized" });
 
     try {
-        await pool.query("DELETE FROM products WHERE id = $1", [req.params.id]);
+        await sequelize.query("DELETE FROM products WHERE id = $1", {
+            bind: [req.params.id],
+            type: sequelize.QueryTypes.DELETE
+        });
         res.json({ message: "Product deleted successfully" });
     } catch (error) {
         res.status(500).json({ message: "Error deleting product", error: error.message });
     }
 });
 
-export default router;
+module.exports = router;
