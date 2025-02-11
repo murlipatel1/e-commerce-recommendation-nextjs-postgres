@@ -29,7 +29,7 @@ router.get("/", authenticateToken, async (req, res) => {
             bind: [req.user.id],
             type: sequelize.QueryTypes.SELECT
         });
-        console.log(result)
+        
         res.json(result);
     } catch (error) {
         res.status(500).json({ message: "Error fetching orders", error: error.message });

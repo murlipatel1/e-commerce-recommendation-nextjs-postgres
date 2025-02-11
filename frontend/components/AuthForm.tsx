@@ -2,11 +2,12 @@
 "use client"
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { login, register } from '@/lib/auth';
+import { useAuth } from '@/contexts/AuthContext';
 import { LoginData, RegisterData } from '@/types';
 
 export default function AuthForm({ mode }: { mode: 'login' | 'register' }) {
   const router = useRouter();
+  const { login, register } = useAuth();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 

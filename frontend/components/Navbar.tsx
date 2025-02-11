@@ -1,4 +1,3 @@
-// src/components/ui/NavBar.tsx
 'use client';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
@@ -7,20 +6,13 @@ import { useAuth } from '@/contexts/AuthContext';
 
 export function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
-  
   const pathname = usePathname();
   const router = useRouter();
   const { user, logout } = useAuth();
-  const [newpathname , setnewPathNames] = useState(pathname);
-  // const [authUser, setAuthUser] = useState(user);
 
   useEffect(() => {
-    // console.log("change", pathname)
-    // console.log("userss", user)
-    setnewPathNames(pathname);
-    // setAuthUser(user); // ✅ Ensure navbar updates when user changes
-    // router.refresh(); // ✅ Refresh the router to update the pathname
-  },[pathname, newpathname]);
+    // console.log('Current user:', user);
+  }, [user]);
 
   const handleLogout = async () => {
     try {
@@ -37,7 +29,6 @@ export function NavBar() {
     { name: 'Recommendations', href: '/recommendations' },
   ];
 
-  
   return (
     <nav className="bg-white shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

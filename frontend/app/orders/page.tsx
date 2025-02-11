@@ -17,7 +17,7 @@ export default function OrdersPage() {
     try {
       const data = await getOrders();
       setOrders(data);
-      console.log(data)
+      
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       setError(err.message);
@@ -32,7 +32,11 @@ export default function OrdersPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold mb-6">My Orders</h1>
-      <OrderList orders={orders} />
+      
+      {orders.length> 0 ? (<OrderList orders={orders} />
+    ) : (
+      <div className="text-gray-500">No orders found.</div>
+    )}
     </div>
   );
 }

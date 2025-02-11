@@ -26,7 +26,7 @@ export const refreshToken = async (token: string) => {
 
 export const getProducts = async () => {
     const response = await api.get<Product[]>('/products');
-    console.log(response.data);
+    
     return response.data;
   };
   

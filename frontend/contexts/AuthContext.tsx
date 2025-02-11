@@ -1,21 +1,19 @@
-// src/contexts/AuthContext.tsx
-"use client"
-// import { jwtDecode } from 'jwt-decode';
+'use client';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import * as auth from '@/lib/auth';
 import { AuthResponse, LoginData, RegisterData } from '@/types';
 import Cookies from 'js-cookie';
 
-// interface User {
-//   id: number;
-//   name: string;
-//   email: string;
-//   role: string;
-// }
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+}
 
 interface AuthContextType {
-  user: string | null;
+  user: User | null;
   login: (data: LoginData) => Promise<void>;
   logout: () => Promise<void>;
   register: (data: RegisterData) => Promise<void>;
@@ -24,25 +22,24 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<string | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
 
   useEffect(() => {
     // Check for stored user data
     const storedUser = sessionStorage.getItem('user');
     const accessToken = Cookies.get('accessToken');
-    console.log(storedUser)
-    console.log(accessToken)
+    
     if (storedUser) {
       setUser(JSON.parse(storedUser));
-      console.log('User loaded from session storage:', JSON.parse(storedUser));
+      
     } else if (accessToken) {
-      const userInfo = accessToken;
+      const userInfo = parseJwt(accessToken);
       setUser(userInfo);
       sessionStorage.setItem('user', JSON.stringify(userInfo));
-      console.log('User info set and stored in session storage from accessToken:', userInfo);
+      
     } else {
-      console.log('No user found in session storage or accessToken');
+      
     }
   }, []);
 
@@ -88,10 +85,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     Cookies.set('refreshToken', refreshToken);
     
     // Decode the JWT to get user info
-    const userInfo = accessToken;
+    const userInfo = parseJwt(accessToken);
     setUser(userInfo);
     sessionStorage.setItem('user', JSON.stringify(userInfo));
-    console.log('User info set and stored in session storage:', userInfo);
+    
   };
 
   return (
@@ -108,4 +105,20 @@ export const useAuth = () => {
   }
   return context;
 };
+
+// Helper function to parse JWT
+function parseJwt(token: string): User {
+  try {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+    return JSON.parse(jsonPayload);
+  } catch (e) {
+    console.error('Failed to parse JWT:', e);
+    
+    return {id: 0,name: "",email: "",role: ""};
+  }
+}
 
