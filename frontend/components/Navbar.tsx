@@ -11,7 +11,7 @@ export function NavBar() {
   const { user, logout } = useAuth();
 
   useEffect(() => {
-    // console.log('Current user:', user);
+    console.log('Current user:', user);
   }, [user]);
 
   const handleLogout = async () => {
@@ -25,6 +25,7 @@ export function NavBar() {
 
   const navigation = [
     { name: 'Products', href: '/products' },
+    { name: 'Add Products', href: '/products/new' },
     { name: 'Orders', href: '/orders' },
     { name: 'Recommendations', href: '/recommendations' },
   ];
@@ -40,7 +41,9 @@ export function NavBar() {
                 E-Shop
               </Link>
             </div>
+            
             <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
+            
               {user && navigation.map((item) => (
                 <Link
                   key={item.name}
@@ -61,6 +64,7 @@ export function NavBar() {
           <div className="hidden sm:ml-6 sm:flex sm:items-center">
             {user ? (
               <div className="flex items-center space-x-4">
+                
                 <button
                   onClick={handleLogout}
                   className="text-gray-500 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"

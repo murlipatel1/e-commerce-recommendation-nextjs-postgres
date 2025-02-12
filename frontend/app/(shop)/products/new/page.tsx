@@ -1,5 +1,6 @@
+"use client"
 import { useState } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { createProduct } from '@/lib/auth';
 
 export default function NewProductPage() {
@@ -32,7 +33,7 @@ export default function NewProductPage() {
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full px-3 py-2 border rounded"
+            className="w-full px-3 py-2 border rounded text-black"
             required
           />
         </div>
@@ -41,7 +42,7 @@ export default function NewProductPage() {
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="w-full px-3 py-2 border rounded"
+            className="w-full px-3 py-2 border rounded text-black"
             required
           />
         </div>
@@ -50,8 +51,10 @@ export default function NewProductPage() {
           <input
             type="number"
             value={price}
-            onChange={(e) => setPrice(Number(e.target.value))}
-            className="w-full px-3 py-2 border rounded"
+            step="0.01"
+            onChange={(e) =>{ const price =parseFloat(e.target.value);
+              setPrice(price)}}
+            className="w-full px-3 py-2 border rounded text-black"
             required
           />
         </div>
@@ -60,8 +63,9 @@ export default function NewProductPage() {
           <input
             type="number"
             value={stock}
-            onChange={(e) => setStock(Number(e.target.value))}
-            className="w-full px-3 py-2 border rounded"
+            onChange={(e) =>{ const stock =parseInt(e.target.value);
+              setStock(stock)}}
+            className="w-full px-3 py-2 border rounded text-black"
             required
           />
         </div>
@@ -71,7 +75,7 @@ export default function NewProductPage() {
             type="text"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            className="w-full px-3 py-2 border rounded"
+            className="w-full px-3 py-2 border rounded text-black"
             required
           />
         </div>
