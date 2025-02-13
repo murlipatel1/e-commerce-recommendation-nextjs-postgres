@@ -12,7 +12,7 @@ export default function OrderList({ orders }: OrderListProps) {
           <div className="flex justify-between items-center">
             <span className="font-semibold">Order #{order.id}</span>
             <span className={`px-2 py-1 rounded text-sm ${
-              order.status === 'completed' ? 'bg-green-100 text-green-800' :
+              order.status === 'delivered' ? 'bg-green-100 text-green-800' :
               order.status === 'cancelled' ? 'bg-red-100 text-red-800' :
               'bg-yellow-100 text-yellow-800'
             }`}>

@@ -5,9 +5,10 @@ interface ProductCardProps {
   product: Product;
   onDelete?: (id: number) => void;
   isAdmin?: boolean;
+  onAddToCart?: (product: Product) => void;
 }
 
-export default function ProductCard({ product, onDelete, isAdmin }: ProductCardProps) {
+export default function ProductCard({ product, onDelete, isAdmin, onAddToCart }: ProductCardProps) {
   const router = useRouter();
 
   return (
@@ -31,6 +32,14 @@ export default function ProductCard({ product, onDelete, isAdmin }: ProductCardP
             className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
           >
             Delete
+          </button>
+        )}
+        {onAddToCart && (
+          <button
+            onClick={() => onAddToCart(product)}
+            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+          >
+            Add to Cart
           </button>
         )}
       </div>

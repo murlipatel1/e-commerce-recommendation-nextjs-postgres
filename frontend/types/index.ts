@@ -38,7 +38,7 @@ export interface User {
     id: number;
     user_id: number;
     total_price: number;
-    status: 'pending' | 'completed' | 'cancelled';
+    status: 'pending' | 'delivered' | 'cancelled';
     created_at: string;
   }
 
