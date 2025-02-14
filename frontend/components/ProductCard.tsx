@@ -6,13 +6,14 @@ interface ProductCardProps {
   onDelete?: (id: number) => void;
   isAdmin?: boolean;
   onAddToCart?: (product: Product) => void;
+  onClick?: () => void;
 }
 
-export default function ProductCard({ product, onDelete, isAdmin, onAddToCart }: ProductCardProps) {
+export default function ProductCard({ product, onDelete, isAdmin, onAddToCart, onClick }: ProductCardProps) {
   const router = useRouter();
 
   return (
-    <div className="border rounded-lg p-4 shadow-sm">
+    <div className="border rounded-lg p-4 shadow-sm" onClick={onClick}>
       <h3 className="text-lg font-semibold">{product.name}</h3>
       <p className="text-gray-600 mt-2">{product.description}</p>
       <div className="mt-4 flex justify-between items-center">

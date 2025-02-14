@@ -1,7 +1,6 @@
 import api from './api';
 import { AuthResponse, LoginData, Order, Product, Recommendation, RegisterData, Review } from '@/types';
 
-
 export const register = async (data: RegisterData) => {
   const response = await api.post<AuthResponse>('/auth/register', data);
   return response.data;
@@ -22,54 +21,56 @@ export const refreshToken = async (token: string) => {
   return response.data;
 };
 
-
 export const getProducts = async () => {
-    const response = await api.get<Product[]>('/products');
-    
-    return response.data;
-  };
-  
-  export const getProduct = async (id: number) => {
-    const response = await api.get<Product>(`/products/${id}`);
-    return response.data;
-  };
+  const response = await api.get<Product[]>('/products');
+  return response.data;
+};
 
-  export const getProductById = async (id: string) => {
-    const response = await api.get<Product>(`/products/${id}`);
-    return response.data;
-  };
-  
-  export const createProduct = async (product: Omit<Product, 'id'>) => {
-    const response = await api.post<Product>('/products', product);
-    return response.data;
-  };
-  
-  export const deleteProduct = async (id: number) => {
-    const response = await api.delete(`/products/${id}`);
-    return response.data;
-  };
-  
-  export const getOrders = async () => {
-    const response = await api.get<Order[]>('/orders');
-    return response.data;
-  };
-  
-  export const createOrder = async (order: { user_id: number; total_price: number }) => {
-    const response = await api.post<Order>('/orders', order);
-    return response.data;
-  };
-  
+export const getProduct = async (id: number) => {
+  const response = await api.get<Product>(`/products/${id}`);
+  return response.data;
+};
 
-  export const getRecommendations = async () => {
-    const response = await api.get<Recommendation[]>('/recommendations');
-    return response.data;
-  };
-  
-  export const createReview = async (review: {
-    product_id: number;
-    rating: number;
-    comment: string;
-  }) => {
-    const response = await api.post<Review>('/reviews', review);
-    return response.data;
-  };
+export const getProductById = async (id: number) => {
+  const response = await api.get<Product>(`/products/${id}`);
+  return response.data;
+};
+
+export const createProduct = async (product: Omit<Product, 'id'>) => {
+  const response = await api.post<Product>('/products', product);
+  return response.data;
+};
+
+export const deleteProduct = async (id: number) => {
+  const response = await api.delete(`/products/${id}`);
+  return response.data;
+};
+
+export const getOrders = async () => {
+  const response = await api.get<Order[]>('/orders');
+  return response.data;
+};
+
+export const createOrder = async (order: { user_id: number; total_price: number }) => {
+  const response = await api.post<Order>('/orders', order);
+  return response.data;
+};
+
+export const getRecommendations = async () => {
+  const response = await api.get<Recommendation[]>('/recommendations');
+  return response.data;
+};
+
+export const updateRecommendation = async (category: string, product_id: number) => {
+  const response = await api.post('/recommendations/update', { category, product_id });
+  return response.data;
+};
+
+export const createReview = async (review: {
+  product_id: number;
+  rating: number;
+  comment: string;
+}) => {
+  const response = await api.post<Review>('/reviews', review);
+  return response.data;
+};

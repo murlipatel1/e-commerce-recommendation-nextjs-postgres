@@ -1,7 +1,7 @@
 "use client"
 import { useEffect, useState } from 'react';
 import { Product } from '@/types';
-import { getProducts, createOrder } from '@/lib/auth';
+import { getProducts, createOrder, updateRecommendation } from '@/lib/auth';
 import ProductCard from '@/components/ProductCard';
 import CartModal from '@/components/CartModal';
 import { useAuth } from '@/contexts/AuthContext';
@@ -12,6 +12,7 @@ export default function ProductsPage() {
   const [error, setError] = useState('');
   const [cart, setCart] = useState<{ product: Product; quantity: number }[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const { user } = useAuth();
 
   useEffect(() => {
@@ -77,6 +78,22 @@ export default function ProductsPage() {
     }
   };
 
+  const handleProductClick = async (category: string, product_id: number) => {
+    try {
+      await updateRecommendation(category, product_id);
+    } catch (err) {
+      if (err instanceof Error) setError(err.message);
+    }
+  };
+
+  const handleCategoryChange = (category: string | null) => {
+    setSelectedCategory(category);
+  };
+
+  const filteredProducts = selectedCategory
+    ? products.filter((product) => product.category === selectedCategory)
+    : products;
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
@@ -92,9 +109,29 @@ export default function ProductsPage() {
           View Cart
         </button>
       </div>
+      <div className="mb-4">
+        <label className="block text-sm font-medium mb-2">Filter by Category:</label>
+        <select
+          value={selectedCategory || ''}
+          onChange={(e) => handleCategoryChange(e.target.value || null)}
+          className="w-full px-3 py-2 border rounded text-black"
+        >
+          <option value="">All Categories</option>
+          {[...new Set(products.map((product) => product.category))].map((category) => (
+            <option key={category} value={category}>
+              {category}
+            </option>
+          ))}
+        </select>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} onAddToCart={addToCart} />
+        {filteredProducts.map((product) => (
+          <ProductCard
+            key={product.id}
+            product={product}
+            onAddToCart={addToCart}
+            onClick={() => handleProductClick(product.category, product.id)}
+          />
         ))}
       </div>
       {isCartOpen && (

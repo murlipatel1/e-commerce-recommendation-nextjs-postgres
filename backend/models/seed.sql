@@ -37,10 +37,9 @@ INSERT INTO reviews (id, user_id, product_id, rating, comment) VALUES
 (gen_random_uuid(), (SELECT id FROM users WHERE email = 'ethan@example.com'), (SELECT id FROM products WHERE name = 'Mechanical Keyboard'), 4, 'Very satisfying keys and great build quality.');
 
 
-INSERT INTO recommendations (user_id, product_id) VALUES
-((SELECT id FROM users WHERE email = 'alice@example.com'), (SELECT id FROM products WHERE name = 'Smartwatch Pro')),
-((SELECT id FROM users WHERE email = 'bob@example.com'), (SELECT id FROM products WHERE name = 'Gaming Laptop')),
-((SELECT id FROM users WHERE email = 'charlie@example.com'), (SELECT id FROM products WHERE name = 'Wireless Earbuds')),
-((SELECT id FROM users WHERE email = 'diana@example.com'), (SELECT id FROM products WHERE name = 'Mechanical Keyboard')),
-((SELECT id FROM users WHERE email = 'ethan@example.com'), (SELECT id FROM products WHERE name = 'Smartphone X'));
-''
+INSERT INTO recommendations (user_id, product_id, category, visit_count) VALUES
+((SELECT id FROM users WHERE email = 'alice@example.com'), (SELECT id FROM products WHERE name = 'Smartwatch Pro'), 'Wearables', 1),
+((SELECT id FROM users WHERE email = 'bob@example.com'), (SELECT id FROM products WHERE name = 'Gaming Laptop'), 'Computers', 1),
+((SELECT id FROM users WHERE email = 'charlie@example.com'), (SELECT id FROM products WHERE name = 'Wireless Earbuds'), 'Accessories', 1),
+((SELECT id FROM users WHERE email = 'diana@example.com'), (SELECT id FROM products WHERE name = 'Mechanical Keyboard'), 'Accessories', 1),
+((SELECT id FROM users WHERE email = 'ethan@example.com'), (SELECT id FROM products WHERE name = 'Smartphone X'), 'Electronics', 1);

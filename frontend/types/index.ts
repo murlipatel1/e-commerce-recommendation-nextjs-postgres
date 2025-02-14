@@ -49,6 +49,7 @@ export interface User {
     product: Product;
     score: number;
     created_at: string;
+    category: string;
   }
   
   export interface Review {
