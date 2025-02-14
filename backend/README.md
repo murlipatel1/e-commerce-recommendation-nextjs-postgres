@@ -72,25 +72,60 @@ module.exports = {
 ### Users Table
 | Column     | Type    | Description          |
 |------------|---------|----------------------|
-| id         | SERIAL  | Primary key          |
-| name       | TEXT    | User's name          |
-| email      | TEXT    | User's email         |
+| id         | UUID    | Primary key          |
+| name       | VARCHAR(100) | User's name          |
+| email      | VARCHAR(255) | User's email         |
 | password   | TEXT    | User's password hash |
+| role       | VARCHAR(20) | User's role (user/admin)   |
+| created_at | TIMESTAMP | Timestamp of creation |
+
+### Refresh Tokens Table
+| Column     | Type    | Description          |
+|------------|---------|----------------------|
+| id         | SERIAL  | Primary key          |
+| user_id    | UUID    | Foreign key to Users |
+| token      | TEXT    | Refresh token        |
+| expires_at | TIMESTAMP | Expiration timestamp |
 
 ### Products Table
 | Column     | Type    | Description          |
 |------------|---------|----------------------|
-| id         | SERIAL  | Primary key          |
-| name       | TEXT    | Product name         |
+| id         | UUID    | Primary key          |
+| name       | VARCHAR(255) | Product name         |
 | description| TEXT    | Product description  |
-| price      | NUMERIC | Product price        |
+| price      | DECIMAL(10,2) | Product price        |
+| stock      | INT     | Product stock number |
+| category   | VARCHAR(50) | Product category       |
+| created_at | TIMESTAMP | Timestamp of creation |
+
+### Orders Table
+| Column     | Type    | Description          |
+|------------|---------|----------------------|
+| id         | UUID    | Primary key          |
+| user_id    | UUID    | Foreign key to Users |
+| total_price| DECIMAL(10,2) | Total price of the order |
+| status     | VARCHAR(20) | Order status (pending/shipped/delivered/cancelled) |
+| created_at | TIMESTAMP | Timestamp of creation |
+
+### Reviews Table
+| Column     | Type    | Description          |
+|------------|---------|----------------------|
+| id         | UUID    | Primary key          |
+| user_id    | UUID    | Foreign key to Users |
+| product_id | UUID    | Foreign key to Products |
+| rating     | INT     | Rating (1-5)         |
+| comment    | TEXT    | Review comment       |
+| created_at | TIMESTAMP | Timestamp of creation |
 
 ### Recommendations Table
 | Column     | Type    | Description          |
 |------------|---------|----------------------|
 | id         | SERIAL  | Primary key          |
-| userId     | INTEGER | Foreign key to Users |
-| productId  | INTEGER | Foreign key to Products |
+| user_id    | UUID    | Foreign key to Users |
+| product_id | UUID    | Foreign key to Products |
+| category   | VARCHAR(50) | Product category       |
+| visit_count| INT     | Visit count          |
+| created_at | TIMESTAMP | Timestamp of creation |
 
 ## Contributing
 
