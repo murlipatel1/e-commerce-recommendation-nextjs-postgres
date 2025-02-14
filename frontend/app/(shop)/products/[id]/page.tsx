@@ -1,6 +1,7 @@
 // pages/products/index.tsx
+"use client"
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { Product } from '@/types';
 import { getProducts, deleteProduct } from '@/lib/auth';
 import ProductCard from '@/components/ProductCard';

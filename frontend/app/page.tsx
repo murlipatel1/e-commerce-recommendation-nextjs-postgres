@@ -52,6 +52,7 @@ export default function Home() {
             src="/hero-section.png"
             width={1000}
             height={1000}
+            priority={false}
             alt="E-Shop Hero"
           />
         </div>

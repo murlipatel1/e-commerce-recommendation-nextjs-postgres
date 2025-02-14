@@ -11,7 +11,7 @@ export function NavBar() {
   const { user, logout } = useAuth();
 
   useEffect(() => {
-    console.log('Current user:', user);
+    // console.log('Current user:', user);
   }, [user]);
 
   const handleLogout = async () => {

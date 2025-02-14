@@ -30,10 +30,7 @@ export interface User {
     stock: number;
     category: string;
   }
-  export interface LogoutData {
-    refreshToken: string;
-  }
-  
+
   export interface Order {
     id: number;
     user_id: number;

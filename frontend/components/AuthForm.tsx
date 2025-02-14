@@ -30,10 +30,12 @@ export default function AuthForm({ mode }: { mode: 'login' | 'register' }) {
     try {
       if (mode === 'login') {
         await login(data as unknown as LoginData);
+        router.push('/products');
       } else {
         await register(data as unknown as RegisterData);
+        router.push('/login');
       }
-      router.push('/products');
+      
     } catch (error) {
       const err = error as CustomError;
       setError(err.response?.data?.message || err.message || 'An error occurred');
@@ -71,6 +73,7 @@ export default function AuthForm({ mode }: { mode: 'login' | 'register' }) {
                 id="email"
                 name="email"
                 type="email"
+                autoComplete='email'
                 required
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Email address"
@@ -82,6 +85,7 @@ export default function AuthForm({ mode }: { mode: 'login' | 'register' }) {
                 id="password"
                 name="password"
                 type="password"
+                autoComplete='current-password'
                 required
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Password"

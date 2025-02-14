@@ -70,8 +70,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const handleRegister = async (data: RegisterData) => {
     try {
-      const response = await auth.register(data);
-      handleAuthResponse(response);
+      await auth.register(data);
+      // handleAuthResponse(response);
       router.push('/products');
     } catch (error) {
       console.error('Registration failed:', error);
@@ -81,8 +81,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const handleAuthResponse = (response: AuthResponse) => {
     const { accessToken, refreshToken } = response;
-    Cookies.set('accessToken', accessToken);
-    Cookies.set('refreshToken', refreshToken);
+    Cookies.set('accessToken', accessToken,{secure:false});
+    Cookies.set('refreshToken', refreshToken, {secure:false});
     
     // Decode the JWT to get user info
     const userInfo = parseJwt(accessToken);
