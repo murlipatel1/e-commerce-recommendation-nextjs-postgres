@@ -44,7 +44,7 @@ export default function RecommendationsPage() {
         <select
           value={selectedCategory || ''}
           onChange={(e) => handleCategoryChange(e.target.value || null)}
-          className="w-full px-3 py-2 border rounded text-black"
+          className="w-fit px-3 py-2 border rounded text-black"
         >
           <option value="">All Categories</option>
           {[...new Set(recommendations.map((recommendation) => recommendation.category))].map((category) => (
