@@ -1,11 +1,8 @@
-import { Router, Request, Response } from "express";
+import { Router, Response } from "express";
 import { QueryTypes } from "sequelize";
 import sequelize from "../config/db";
 import authenticateToken from "../middleware/auth.middleware";
-
-interface AuthenticatedRequest extends Request {
-    user?: { id: number; role: string };
-}
+import { AuthenticatedRequest } from "../utils/type";
 
 
 const router = Router();

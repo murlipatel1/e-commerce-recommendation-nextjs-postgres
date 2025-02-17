@@ -1,10 +1,9 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import { verify } from "jsonwebtoken";
+import { AuthenticatedRequest } from "../utils/type";
 
 // Extend Express Request type to include `user`
-interface AuthenticatedRequest extends Request {
-    user?: { id: number; email: string; role: string };
-}
+
 
 function authenticateToken(req: AuthenticatedRequest, res: Response, next: NextFunction): void {
     const token = req.cookies?.accessToken || req.headers["authorization"]?.split(" ")[1];
@@ -15,6 +14,7 @@ function authenticateToken(req: AuthenticatedRequest, res: Response, next: NextF
     }
 
     verify(token, process.env.JWT_SECRET as string, (err: Error | null, decoded: any) => {
+        console.log("decoded"+decoded)
         if (err) {
             res.status(403).json({ message: "Invalid token" });
             return; // Ensure function always returns a value

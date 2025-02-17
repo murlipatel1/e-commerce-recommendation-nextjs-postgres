@@ -5,6 +5,7 @@ import { sign, verify } from "jsonwebtoken";
 import { QueryTypes } from "sequelize";
 import sequelize from "../config/db";
 import dotenv from "dotenv";
+import { User } from "../utils/type";
 
 dotenv.config();
 
@@ -12,11 +13,11 @@ const router = Router();
 
 
 // Function to generate JWT token
-const generateAccessToken = (user: any) => {
+const generateAccessToken = (user: User) => {
     return sign({ id: user.id, email: user.email, role: user.role }, process.env.JWT_SECRET as string, { expiresIn: "1d" });
 };
 
-const generateRefreshToken = (user: any) => {
+const generateRefreshToken = (user: User) => {
     return sign({ id: user.id }, process.env.REFRESH_SECRET as string, { expiresIn: "7d" });
 };
 
@@ -89,7 +90,7 @@ router.post("/refresh", async (req: Request, res: Response): Promise<any> => {
         if (!refreshSecret) {
             return res.status(500).json({ message: "Refresh secret not defined" });
         }
-        verify(refreshToken, refreshSecret, (err:any, user:any) => {
+        verify(refreshToken, refreshSecret, (err: Error | null, user:any) => {
             if (err) return res.status(403).json({ message: "Invalid refresh token" });
 
             const newAccessToken = generateAccessToken(user);
