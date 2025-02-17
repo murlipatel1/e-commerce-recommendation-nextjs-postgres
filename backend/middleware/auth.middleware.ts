@@ -14,7 +14,7 @@ function authenticateToken(req: AuthenticatedRequest, res: Response, next: NextF
     }
 
     verify(token, process.env.JWT_SECRET as string, (err: Error | null, decoded: any) => {
-        console.log("decoded"+decoded)
+   
         if (err) {
             res.status(403).json({ message: "Invalid token" });
             return; // Ensure function always returns a value

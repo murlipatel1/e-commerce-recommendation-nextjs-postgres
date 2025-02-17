@@ -31,7 +31,7 @@ export const getProduct = async (id: number) => {
   return response.data;
 };
 
-export const getProductById = async (id: number) => {
+export const getProductById = async (id: string) => {
   const response = await api.get<Product>(`/products/${id}`);
   return response.data;
 };
@@ -45,6 +45,11 @@ export const deleteProduct = async (id: number) => {
   const response = await api.delete(`/products/${id}`);
   return response.data;
 };
+
+export const updateProduct = async (product: Product) => {
+  const response = await api.put<Product>(`/products/${product.id}`, product);
+  return response.data;
+}
 
 export const getOrders = async () => {
   const response = await api.get<Order[]>('/orders');

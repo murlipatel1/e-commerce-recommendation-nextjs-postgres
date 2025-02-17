@@ -72,5 +72,24 @@ router.delete("/:id", authenticateToken, async (req: AuthenticatedRequest, res: 
     }
 });
 
+// Update Product (Admin only)
+router.put("/:id", authenticateToken, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+    if (req.user?.role !== "admin") res.status(403).json({ message: "Unauthorized" });
+
+    const { name, description, price, stock, category } = req.body;
+
+    try {
+        await sequelize.query(
+            "UPDATE products SET name = $1, description = $2, price = $3, stock = $4, category = $5 WHERE id = $6",
+            {
+                bind: [name, description, price, stock, category, req.params.id],
+                type: QueryTypes.UPDATE
+            }
+        );
+        res.json({ message: "Product updated successfully" });
+    } catch (error) {
+        res.status(500).json({ message: "Error updating product", error: (error as Error).message });
+    }
+});
 
 export default router;
