@@ -69,7 +69,7 @@ export default function ProductsPage() {
     const total_price = cart.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
 
     try {
-      await createOrder({ user_id: user.id, total_price });
+      await createOrder({ user_id: user.id, total_price:total_price*1.12 });
       setCart([]);
       toggleCartModal();
       alert('Order placed successfully!');

@@ -72,10 +72,15 @@ export const updateRecommendation = async (category: string, product_id: number)
 };
 
 export const createReview = async (review: {
-  product_id: number;
+  product_id: string;
   rating: number;
   comment: string;
 }) => {
   const response = await api.post<Review>('/reviews', review);
+  return response.data;
+};
+
+export const getReviews = async (product_id: string) => {
+  const response = await api.get<Review[]>(`/reviews/${product_id}`);
   return response.data;
 };

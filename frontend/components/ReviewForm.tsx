@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { createReview } from '@/lib/auth';
 
 interface ReviewFormProps {
-  productId: number;
+  productId: string;
   onReviewSubmitted: () => void;
 }
 
@@ -37,11 +37,11 @@ export default function ReviewForm({ productId, onReviewSubmitted }: ReviewFormP
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label className="block text-sm font-medium text-gray-700">Rating</label>
+        <label className="block text-xl font-medium">Rating</label>
         <select
           value={rating}
           onChange={(e) => setRating(Number(e.target.value))}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          className="mt-1 block w-fit p-2 rounded-md text-black border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
         >
           {[5, 4, 3, 2, 1].map((value) => (
             <option key={value} value={value}>
@@ -52,12 +52,12 @@ export default function ReviewForm({ productId, onReviewSubmitted }: ReviewFormP
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700">Comment</label>
+        <label className="block text-xl font-medium text-white">Comment</label>
         <textarea
           value={comment}
           onChange={(e) => setComment(e.target.value)}
           rows={4}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          className="mt-1 block w-full text-black rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
           placeholder="Write your review here..."
           required
         />

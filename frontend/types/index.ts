@@ -50,6 +50,7 @@ export interface User {
   }
   
   export interface Review {
+    user_name: ReactNode;
     id: number;
     user_id: number;
     product_id: number;

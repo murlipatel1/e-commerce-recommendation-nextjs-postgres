@@ -1,12 +1,14 @@
 "use client"
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { Product } from '@/types';
-import { getProductById, deleteProduct, updateProduct } from '@/lib/auth';
+import { Product, Review } from '@/types';
+import { getProductById, deleteProduct, updateProduct, getReviews } from '@/lib/auth';
 import { useAuth } from '@/contexts/AuthContext';
+import ReviewForm from '@/components/ReviewForm';
 
 export default function ProductPage() {
   const [product, setProduct] = useState<Product | null>(null);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -19,6 +21,7 @@ export default function ProductPage() {
   useEffect(() => {
     if (id) {
       loadProduct(id as string);
+      loadReviews(id as string);
     }
   }, [id]);
 
@@ -30,6 +33,16 @@ export default function ProductPage() {
       if (err instanceof Error) setError(err.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadReviews = async (productId: string) => {
+    try {
+      const data = await getReviews(productId);
+      setReviews(data);
+      console.log(data)
+    } catch (err) {
+      if (err instanceof Error) setError(err.message);
     }
   };
 
@@ -67,6 +80,12 @@ export default function ProductPage() {
       } catch (err) {
         if (err instanceof Error) setError(err.message);
       }
+    }
+  };
+
+  const handleReviewSubmitted = () => {
+    if (id) {
+      loadReviews(id as string);
     }
   };
 
@@ -180,6 +199,31 @@ export default function ProductPage() {
           </div>
         </div>
       )}
+
+      <div className="mt-8 text-white">
+        <h2 className="text-xl font-bold mb-4">Reviews</h2>
+        {reviews.length > 0 ? (
+          <ul className="space-y-4">
+            {reviews.map((review) => (
+              <li key={review.id} className="border rounded-lg p-4 shadow-sm">
+                <div className="flex justify-between items-center">
+                  <span className="font-semibold">{review.user_name}</span>
+                  <span className="text-yellow-500">{'★'.repeat(review.rating)}</span>
+                </div>
+                <p className="mt-2">{review.comment}</p>
+                <p className="mt-2 text-sm text-gray-500">{new Date(review.created_at).toLocaleDateString()}</p>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <div className="text-gray-500">No reviews yet.</div>
+        )}
+      </div>
+
+      <div className="mt-8">
+        <h2 className="text-xl font-bold mb-4">Add a Review</h2>
+        <ReviewForm productId={id as string} onReviewSubmitted={handleReviewSubmitted} />
+      </div>
     </div>
   );
 }
