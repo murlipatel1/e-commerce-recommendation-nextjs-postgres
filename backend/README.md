@@ -64,6 +64,12 @@ module.exports = {
 - `PUT /products/:id`: Update a product by ID
 - `DELETE /products/:id`: Delete a product by ID
 
+### Reviews
+
+- `POST /api/v1/reviews`: Create a new review
+- `GET /api/v1/reviews/:productId`: Get all reviews for the given product
+
+
 ### Recommendation Endpoints
 - `GET /recommendations/:userId`: Retrieve product recommendations for a user
 

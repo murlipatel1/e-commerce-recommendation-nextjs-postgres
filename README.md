@@ -105,6 +105,7 @@ npm run dev
 ### Reviews
 
 - `POST /api/v1/reviews`: Create a new review
+- `GET /api/v1/reviews/:productId`: Get all reviews for the given product
 
 ### Recommendations
 
