@@ -40,7 +40,6 @@ export default function ProductPage() {
     try {
       const data = await getReviews(productId);
       setReviews(data);
-      console.log(data)
     } catch (err) {
       if (err instanceof Error) setError(err.message);
     }
@@ -96,32 +95,34 @@ export default function ProductPage() {
     <div className="container mx-auto px-4 py-8">
       {product && (
         <>
-          <h1 className="text-2xl font-bold mb-6">{product.name}</h1>
-          <p className="mb-4">{product.description}</p>
-          <p className="mb-4">Price: ${product.price}</p>
-          <p className="mb-4">Stock: {product.stock}</p>
-          <p className="mb-4">Category: {product.category}</p>
-          {user?.role === 'admin' && (
-            <div className="mt-4 flex gap-2">
-              <button
-                onClick={handleEdit}
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-              >
-                Edit
-              </button>
-              <button
-                onClick={handleDelete}
-                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-              >
-                Delete
-              </button>
-            </div>
-          )}
+          <div className="bg-white shadow-md rounded-lg p-6 mb-6">
+            <h1 className="text-3xl font-bold mb-4 text-black ">{product.name}</h1>
+            <p className="text-black mb-4">{product.description}</p>
+            <p className="text-black font-semibold mb-2">Price: ${product.price}</p>
+            <p className="text-black font-semibold mb-2">Stock: {product.stock}</p>
+            <p className="text-black font-semibold mb-2">Category: {product.category}</p>
+            {user?.role === 'admin' && (
+              <div className="mt-4 flex gap-2">
+                <button
+                  onClick={handleEdit}
+                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={handleDelete}
+                  className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                >
+                  Delete
+                </button>
+              </div>
+            )}
+          </div>
         </>
       )}
 
       {isEditModalOpen && editProduct && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
           <div className="bg-white rounded-lg p-6 w-full max-w-md text-black">
             <h2 className="text-2xl font-bold mb-4">Edit Product</h2>
             <form onSubmit={handleEditSubmit}>
@@ -184,7 +185,7 @@ export default function ProductPage() {
                 <button
                   type="button"
                   onClick={() => setIsEditModalOpen(false)}
-                  className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+                  className="bg-black text-white px-4 py-2 rounded hover:bg-black"
                 >
                   Cancel
                 </button>
@@ -200,28 +201,28 @@ export default function ProductPage() {
         </div>
       )}
 
-      <div className="mt-8 text-white">
-        <h2 className="text-xl font-bold mb-4">Reviews</h2>
+      <div className="mt-8">
+        <h2 className="text-2xl font-bold mb-4">Reviews</h2>
         {reviews.length > 0 ? (
           <ul className="space-y-4">
             {reviews.map((review) => (
-              <li key={review.id} className="border rounded-lg p-4 shadow-sm">
-                <div className="flex justify-between items-center">
+              <li key={review.id} className="bg-white border rounded-lg p-4 shadow-sm">
+                <div className="flex justify-between items-center text-black">
                   <span className="font-semibold">{review.user_name}</span>
                   <span className="text-yellow-500">{'★'.repeat(review.rating)}</span>
                 </div>
-                <p className="mt-2">{review.comment}</p>
-                <p className="mt-2 text-sm text-gray-500">{new Date(review.created_at).toLocaleDateString()}</p>
+                <p className="mt-2 text-black">{review.comment}</p>
+                <p className="mt-2 text-sm text-black">{new Date(review.created_at).toLocaleDateString()}</p>
               </li>
             ))}
           </ul>
         ) : (
-          <div className="text-gray-500">No reviews yet.</div>
+          <div className="text-black">No reviews yet.</div>
         )}
       </div>
 
       <div className="mt-8">
-        <h2 className="text-xl font-bold mb-4">Add a Review</h2>
+        <h2 className="text-2xl font-bold mb-4">Add a Review</h2>
         <ReviewForm productId={id as string} onReviewSubmitted={handleReviewSubmitted} />
       </div>
     </div>
