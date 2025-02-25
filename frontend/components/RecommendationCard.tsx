@@ -18,7 +18,7 @@ export default function RecommendationCard({ recommendation }: RecommendationCar
     }
   }, [recommendation.product_id]);
 
-  const loadProduct = async (productId: number) => {
+  const loadProduct = async (productId: string) => {
     try {
       const data = await getProductById(productId);
       setProduct(data);

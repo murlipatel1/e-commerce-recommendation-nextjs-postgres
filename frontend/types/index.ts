@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export interface User {
     id: number;
     name: string;
@@ -42,7 +44,7 @@ export interface User {
   export interface Recommendation {
     id: number;
     user_id: number;
-    product_id: number;
+    product_id: string;
     product: Product;
     score: number;
     created_at: string;
@@ -53,7 +55,7 @@ export interface User {
     user_name: ReactNode;
     id: number;
     user_id: number;
-    product_id: number;
+    product_id: string;
     rating: number;
     comment: string;
     created_at: string;
