@@ -10,14 +10,47 @@ interface AuthenticatedRequest extends Request {
 
 const router = Router();
 
-// Place Order
-router.post("/", authenticateToken, 
- placeOrder
-);
+/**
+ * @swagger
+ * /api/v1/orders:
+ *   post:
+ *     summary: Place a new order
+ *     tags: [Orders]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               user_id:
+ *                 type: number
+ *               total_price:
+ *                 type: number
+ *     responses:
+ *       201:
+ *         description: Order placed successfully
+ *       500:
+ *         description: Error placing order
+ */
+router.post("/", authenticateToken, placeOrder);
 
-// Get Orders of Logged-in User
-router.get("/", authenticateToken, 
-   getOrder
-);
+/**
+ * @swagger
+ * /api/v1/orders:
+ *   get:
+ *     summary: Get orders of the logged-in user
+ *     tags: [Orders]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of orders
+ *       500:
+ *         description: Error fetching orders
+ */
+router.get("/", authenticateToken, getOrder);
 
 export default router;
