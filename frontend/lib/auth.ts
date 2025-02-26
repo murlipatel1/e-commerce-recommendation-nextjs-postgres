@@ -36,8 +36,10 @@ export const getProductById = async (id: string) => {
   return response.data;
 };
 
-export const createProduct = async (product: Omit<Product, 'id'>) => {
-  const response = await api.post<Product>('/products', product);
+export const createProduct = async (product:FormData) => {
+  const response = await api.post<Product>('/products', product,
+    { headers: { 'Content-Type': 'multipart/form-data' } }
+  );
   return response.data;
 };
 

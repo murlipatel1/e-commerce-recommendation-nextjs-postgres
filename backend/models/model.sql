@@ -24,6 +24,7 @@ CREATE TABLE products (
     price DECIMAL(10,2) NOT NULL CHECK (price > 0),
     stock INT NOT NULL CHECK (stock >= 0),
     category VARCHAR(50),
+    photo_url TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

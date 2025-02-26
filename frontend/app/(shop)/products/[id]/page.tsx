@@ -5,6 +5,7 @@ import { Product, Review } from '@/types';
 import { getProductById, deleteProduct, updateProduct, getReviews } from '@/lib/auth';
 import { useAuth } from '@/contexts/AuthContext';
 import ReviewForm from '@/components/ReviewForm';
+import Image from 'next/image';
 
 export default function ProductPage() {
   const [product, setProduct] = useState<Product | null>(null);
@@ -96,11 +97,16 @@ export default function ProductPage() {
       {product && (
         <>
           <div className="bg-white shadow-md rounded-lg p-6 mb-6">
+            <div className='flex justify-between items-center'>
+            <div>
             <h1 className="text-3xl font-bold mb-4 text-black ">{product.name}</h1>
             <p className="text-black mb-4">{product.description}</p>
             <p className="text-black font-semibold mb-2">Price: ${product.price}</p>
             <p className="text-black font-semibold mb-2">Stock: {product.stock}</p>
             <p className="text-black font-semibold mb-2">Category: {product.category}</p>
+            </div>
+            <Image src={product.photo_url} alt={product.name} className=" object-cover rounded-lg" width={250} height={200} />
+            </div>
             {user?.role === 'admin' && (
               <div className="mt-4 flex gap-2">
                 <button
@@ -217,7 +223,7 @@ export default function ProductPage() {
             ))}
           </ul>
         ) : (
-          <div className="text-black">No reviews yet.</div>
+          <div className="text-white">No reviews yet.</div>
         )}
       </div>
 

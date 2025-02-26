@@ -3,24 +3,25 @@ import { QueryTypes } from "sequelize";
 import sequelize from "../config/db";
 import authenticateToken from "../middleware/auth.middleware";
 import { AuthenticatedRequest } from "../utils/type";
-
+import { uploadPhoto, uploadToImageKit } from "../middleware/upload.middleware";
 
 const router = Router();
 
 // Create Product (Admin only)
-router.post("/", authenticateToken, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+router.post("/", uploadPhoto, uploadToImageKit, authenticateToken, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
     if (req.user?.role !== "admin") {
         res.status(403).json({ message: "Unauthorized" });
         return;
     }
 
     const { name, description, price, stock, category } = req.body;
+    const photo_url = req.body.photo_url || "";
 
     try {
         const result = await sequelize.query(
-            "INSERT INTO products (name, description, price, stock, category) VALUES ($1, $2, $3, $4, $5) RETURNING *",
+            "INSERT INTO products (name, description, price, stock, category, photo_url) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
             {
-                bind: [name, description, price, stock, category],
+                bind: [name, description, price, stock, category, photo_url],
                 type: QueryTypes.INSERT
             }
         );
@@ -67,22 +68,22 @@ router.delete("/:id", authenticateToken, async (req: AuthenticatedRequest, res: 
             type: QueryTypes.DELETE
         });
         res.json({ message: "Product deleted successfully" });
-    } catch (error ) {
+    } catch (error) {
         res.status(500).json({ message: "Error deleting product", error: (error as Error).message });
     }
 });
 
 // Update Product (Admin only)
-router.put("/:id", authenticateToken, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+router.put("/:id", uploadPhoto, uploadToImageKit, authenticateToken, async (req: AuthenticatedRequest, res: Response): Promise<void> => {
     if (req.user?.role !== "admin") res.status(403).json({ message: "Unauthorized" });
 
-    const { name, description, price, stock, category } = req.body;
+    const { name, description, price, stock, category, photo_url } = req.body;
 
     try {
         await sequelize.query(
-            "UPDATE products SET name = $1, description = $2, price = $3, stock = $4, category = $5 WHERE id = $6",
+            "UPDATE products SET name = $1, description = $2, price = $3, stock = $4, category = $5, photo_url = $6 WHERE id = $7",
             {
-                bind: [name, description, price, stock, category, req.params.id],
+                bind: [name, description, price, stock, category, photo_url, req.params.id],
                 type: QueryTypes.UPDATE
             }
         );

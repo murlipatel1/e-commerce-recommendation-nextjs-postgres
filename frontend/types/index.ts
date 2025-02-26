@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export interface User {
     id: number;
     name: string;
@@ -29,6 +31,7 @@ export interface User {
     price: number;
     stock: number;
     category: string;
+    photo_url: string;
   }
 
   export interface Order {
