@@ -1,9 +1,5 @@
 import { Router } from "express";
-import { Request, Response } from "express";
-import { hash, compare } from "bcryptjs";
-import { sign, verify } from "jsonwebtoken";
-import { QueryTypes } from "sequelize";
-import sequelize from "../config/db";
+import { sign } from "jsonwebtoken";
 import dotenv from "dotenv";
 import { User } from "../utils/type";
 import { loginFn, logoutFn, refreshFn, registerFn } from "../controllers/auth.controller";

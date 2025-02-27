@@ -1,8 +1,5 @@
-import { Router, Response, NextFunction } from "express";
-import { QueryTypes } from "sequelize";
-import sequelize from "../config/db";
+import { Router} from "express";
 import authenticateToken from "../middleware/auth.middleware";
-import { AuthenticatedRequest } from "../utils/type";
 import { addReview, getReviewById } from "../controllers/review.controller";
 
 const router = Router();

@@ -1,12 +1,6 @@
-import { Router, Request, Response } from "express";
-import { QueryTypes } from "sequelize";
-import sequelize from "../config/db";
+import { Router } from "express";
 import authenticateToken from "../middleware/auth.middleware";
 import { getOrder, placeOrder } from "../controllers/order.controller";
-
-interface AuthenticatedRequest extends Request {
-    user?: { id: number };
-}
 
 const router = Router();
 
