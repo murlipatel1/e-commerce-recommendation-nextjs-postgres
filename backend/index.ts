@@ -59,5 +59,9 @@ app.use("/api/v1/orders", orderRoutes);
 app.use("/api/v1/reviews", reviewRoutes);
 app.use("/api/v1/recommendations", recommendationRoutes);
 
+app.get("/", (req, res) => {
+    res.send("Welcome to the E-commerce Recommendation System API");
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
