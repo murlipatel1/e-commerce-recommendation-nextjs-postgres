@@ -2,7 +2,6 @@ import { Router } from "express";
 import dotenv from "dotenv";
 import { loginFn, logoutFn, refreshFn, registerFn, getUserById } from "../controllers/auth.controller";
 import { uploadPhoto, uploadToImageKit } from "../middleware/upload.middleware";
-import authenticateToken from "../middleware/auth.middleware";
 
 dotenv.config();
 
