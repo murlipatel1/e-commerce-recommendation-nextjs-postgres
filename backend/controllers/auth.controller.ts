@@ -1,13 +1,12 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import { hash, compare } from "bcryptjs";
 import { sign, verify } from "jsonwebtoken";
 import { QueryTypes } from "sequelize";
 import sequelize from "../config/db";
 import dotenv from "dotenv";
-import { User } from "../utils/type";
+import { AuthenticatedRequest, User } from "../utils/type";
 
 dotenv.config();
-
 
 // Function to generate JWT token
 const generateAccessToken = (user: User) => {
@@ -112,5 +111,26 @@ export const logoutFn= async (req: Request, res: Response) => {
     res.clearCookie("accessToken");
     res.clearCookie("refreshToken");
     res.json({ message: "Logged out successfully" });
+};
+
+// Get User by ID
+export const getUserById = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
+    const { id } = req.params;
+
+    try {
+        const result = await sequelize.query("SELECT id, name, email, role, photo_url FROM users WHERE id = $1", {
+            bind: [id],
+            type: QueryTypes.SELECT
+        });
+
+        if (result.length === 0) {
+            res.status(404).json({ message: "User not found" });
+            return;
+        }
+
+        res.status(200).json(result[0]);
+    } catch (error) {
+        next(error); // Pass error to error-handling middleware
+    }
 };
 

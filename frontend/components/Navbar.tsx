@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
+import Image from 'next/image';
 
 export function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -42,7 +43,6 @@ export function NavBar() {
             </div>
             
             <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-            {/* Mobile Navigation */}
               {user && navigation.map((item) => (
                 <Link
                   key={item.name}
@@ -75,7 +75,15 @@ export function NavBar() {
           <div className="hidden sm:ml-6 sm:flex sm:items-center">
             {user ? (
               <div className="flex items-center space-x-4">
-                
+                <Link href="/profile">
+                  <Image
+                    src={user.photo_url || '/default-profile.png'}
+                    alt="Profile"
+                    className="w-8 h-8 rounded-full cursor-pointer"
+                    width={32}
+                    height={32}
+                  />
+                </Link>
                 <button
                   onClick={handleLogout}
                   className="text-gray-500 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
@@ -156,6 +164,11 @@ export function NavBar() {
           {user ? (
             <div className="pt-4 pb-3 border-t border-gray-200">
               <div className="mt-3 space-y-1">
+                <Link href="/profile">
+                  <div className="flex items-center px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100">
+                    <span>Profile</span>
+                  </div>
+                </Link>
                 <button
                   onClick={() => {
                     handleLogout();

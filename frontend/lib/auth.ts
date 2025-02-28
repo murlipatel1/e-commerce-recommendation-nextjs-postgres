@@ -21,6 +21,11 @@ export const refreshToken = async (token: string) => {
   return response.data;
 };
 
+export const getUserById = async (userId: string) => {
+  const response = await api.get(`/auth/${userId}`);
+  return response.data;
+}
+
 export const getProducts = async () => {
   const response = await api.get<Product[]>('/products');
   return response.data;
@@ -58,7 +63,7 @@ export const getOrders = async () => {
   return response.data;
 };
 
-export const createOrder = async (order: { user_id: number; total_price: number }) => {
+export const createOrder = async (order: { user_id: string; total_price: number }) => {
   const response = await api.post<Order>('/orders', order);
   return response.data;
 };

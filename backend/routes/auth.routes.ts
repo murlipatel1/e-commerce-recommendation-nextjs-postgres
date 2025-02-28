@@ -1,22 +1,12 @@
 import { Router } from "express";
-import { sign } from "jsonwebtoken";
 import dotenv from "dotenv";
-import { User } from "../utils/type";
-import { loginFn, logoutFn, refreshFn, registerFn } from "../controllers/auth.controller";
+import { loginFn, logoutFn, refreshFn, registerFn, getUserById } from "../controllers/auth.controller";
 import { uploadPhoto, uploadToImageKit } from "../middleware/upload.middleware";
+import authenticateToken from "../middleware/auth.middleware";
 
 dotenv.config();
 
 const router = Router();
-
-// Function to generate JWT token
-const generateAccessToken = (user: User) => {
-    return sign({ id: user.id, email: user.email, role: user.role }, process.env.JWT_SECRET as string, { expiresIn: "1d" });
-};
-
-const generateRefreshToken = (user: User) => {
-    return sign({ id: user.id }, process.env.REFRESH_SECRET as string, { expiresIn: "7d" });
-};
 
 /**
  * @swagger
@@ -124,5 +114,28 @@ router.post("/refresh", refreshFn);
  *         description: Error logging out
  */
 router.post("/logout", logoutFn);
+
+/**
+ * @swagger
+ * /api/v1/auth/user/{id}:
+ *   get:
+ *     summary: Get user information by ID
+ *     tags: [Auth]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: User ID
+ *     responses:
+ *       200:
+ *         description: User information retrieved successfully
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Error retrieving user information
+ */
+router.get("/:id", getUserById);
 
 export default router;

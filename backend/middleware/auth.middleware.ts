@@ -19,7 +19,7 @@ function authenticateToken(req: AuthenticatedRequest, res: Response, next: NextF
             res.status(403).json({ message: "Invalid token" });
             return; // Ensure function always returns a value
         }
-
+        console.log("decoded token", decoded);
         req.user = decoded as { id: number; email: string; role: string };
         next();
     });

@@ -6,10 +6,11 @@ import { AuthResponse, LoginData, RegisterData } from '@/types';
 import Cookies from 'js-cookie';
 
 interface User {
-  id: number;
+  id: string;
   name: string;
   email: string;
   role: string;
+  photo_url?: string;
 }
 
 interface AuthContextType {
@@ -118,7 +119,7 @@ function parseJwt(token: string): User {
   } catch (e) {
     console.error('Failed to parse JWT:', e);
     
-    return {id: 0,name: "",email: "",role: ""};
+    return {id: "",name: "",email: "",role: ""};
   }
 }
 
