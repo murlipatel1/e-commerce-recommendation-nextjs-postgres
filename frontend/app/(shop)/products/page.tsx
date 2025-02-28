@@ -5,6 +5,8 @@ import { getProducts, createOrder, updateRecommendation } from '@/lib/auth';
 import ProductCard from '@/components/ProductCard';
 import CartModal from '@/components/CartModal';
 import { useAuth } from '@/contexts/AuthContext';
+import Slider from 'rc-slider';
+import 'rc-slider/assets/index.css';
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -13,6 +15,8 @@ export default function ProductsPage() {
   const [cart, setCart] = useState<{ product: Product; quantity: number }[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 10000]);
   const { user } = useAuth();
 
   useEffect(() => {
@@ -69,7 +73,7 @@ export default function ProductsPage() {
     const total_price = cart.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
 
     try {
-      await createOrder({ user_id: user.id, total_price:total_price*1.12 });
+      await createOrder({ user_id: user.id, total_price: total_price * 1.12 });
       setCart([]);
       toggleCartModal();
       alert('Order placed successfully!');
@@ -90,9 +94,22 @@ export default function ProductsPage() {
     setSelectedCategory(category);
   };
 
-  const filteredProducts = selectedCategory
-    ? products.filter((product) => product.category === selectedCategory)
-    : products;
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handlePriceRangeChange = (value: number | number[]) => {
+    if (Array.isArray(value) && value.length === 2) {
+      setPriceRange([value[0], value[1]]);
+    }
+  };
+
+  const filteredProducts = products.filter((product) => {
+    const matchesCategory = selectedCategory ? product.category === selectedCategory : true;
+    const matchesSearchTerm = product.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesPriceRange = product.price >= priceRange[0] && product.price <= priceRange[1];
+    return matchesCategory && matchesSearchTerm && matchesPriceRange;
+  });
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
@@ -109,12 +126,13 @@ export default function ProductsPage() {
           View Cart
         </button>
       </div>
+      <div className='grid md:grid-cols-3 sm:grid-cols-1 gap-4'>
       <div className="mb-4">
         <label className="block text-sm font-medium mb-2">Filter by Category:</label>
         <select
           value={selectedCategory || ''}
           onChange={(e) => handleCategoryChange(e.target.value || null)}
-          className="w-fit px-3 py-2 border rounded text-black"
+          className="w-full px-3 py-2 border rounded text-black"
         >
           <option value="">All Categories</option>
           {[...new Set(products.map((product) => product.category))].map((category) => (
@@ -123,6 +141,33 @@ export default function ProductsPage() {
             </option>
           ))}
         </select>
+      </div>
+      <div className="mb-4 ">
+        <label className="block text-sm font-medium mb-2">Search:</label>
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={handleSearchChange}
+          className="w-full px-3 py-2 border rounded text-black"
+          placeholder="Search products..."
+        />
+      </div>
+      <div className="mb-4 ">
+        <label className="block text-sm font-medium mb-2">Price Range:</label>
+        <Slider
+          range
+          min={0}
+          max={1000}
+          defaultValue={[0, 1000]}
+          value={priceRange}
+          onChange={handlePriceRangeChange}
+          className="mb-4"
+        />
+        <div className="flex justify-between text-sm text-white ">
+          <span>${priceRange[0]}</span>
+          <span>${priceRange[1]}</span>
+        </div>
+      </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredProducts.map((product) => (
