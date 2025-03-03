@@ -17,7 +17,6 @@ export const uploadToImageKit = async (req: Request, res: Response, next: NextFu
   if (!req.file) {
     return next();
   }
-
   try {
     const result = await imagekit.upload({
       file: req.file.buffer,

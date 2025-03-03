@@ -37,7 +37,7 @@ const router = Router();
  *       500:
  *         description: Error registering user
  */
-router.post("/register", uploadPhoto, uploadToImageKit, registerFn);
+router.post("/register", registerFn);
 
 /**
  * @swagger
