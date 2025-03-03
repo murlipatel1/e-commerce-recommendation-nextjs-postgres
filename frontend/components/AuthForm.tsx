@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { LoginData, RegisterData } from '@/types';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface CustomError extends Error {
   response?: {
@@ -16,12 +18,10 @@ interface CustomError extends Error {
 export default function AuthForm({ mode }: { mode: 'login' | 'register' }) {
   const router = useRouter();
   const { login, register } = useAuth();
-  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError('');
     setLoading(true);
 
     const formData = new FormData(e.currentTarget);
@@ -30,15 +30,16 @@ export default function AuthForm({ mode }: { mode: 'login' | 'register' }) {
     try {
       if (mode === 'login') {
         await login(data as unknown as LoginData);
+        toast.success('Logged in successfully!');
         router.push('/products');
       } else {
         await register(data as unknown as RegisterData);
+        toast.success('Registered successfully!');
         router.push('/login');
       }
-      
     } catch (error) {
       const err = error as CustomError;
-      setError(err.response?.data?.message || err.message || 'An error occurred');
+      toast.error(err.response?.data?.message || err.message || 'An error occurred');
     } finally {
       setLoading(false);
     }
@@ -93,10 +94,6 @@ export default function AuthForm({ mode }: { mode: 'login' | 'register' }) {
             </div>
           </div>
 
-          {error && (
-            <div className="text-red-500 text-sm text-center">{error}</div>
-          )}
-
           <div>
             <button
               type="submit"
@@ -107,6 +104,7 @@ export default function AuthForm({ mode }: { mode: 'login' | 'register' }) {
             </button>
           </div>
         </form>
+        <ToastContainer />
       </div>
     </div>
   );

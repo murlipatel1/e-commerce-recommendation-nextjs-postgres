@@ -46,7 +46,7 @@ export interface User {
   export interface Recommendation {
     id: number;
     user_id: number;
-    product_id: number;
+    product_id: string;
     product: Product;
     score: number;
     created_at: string;
