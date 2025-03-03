@@ -11,6 +11,7 @@ import productRoutes from "./routes/product.routes";
 import orderRoutes from "./routes/order.routes";
 import reviewRoutes from "./routes/review.routes";
 import recommendationRoutes from "./routes/recommendation.routes";
+import adminRoutes from "./routes/admin.routes";
 
 config();
 const app = express();
@@ -58,6 +59,7 @@ app.use("/api/v1/products", productRoutes);
 app.use("/api/v1/orders", orderRoutes);
 app.use("/api/v1/reviews", reviewRoutes);
 app.use("/api/v1/recommendations", recommendationRoutes);
+app.use("/api/v1/admin", adminRoutes);
 
 app.get("/", (req, res) => {
     res.send("Welcome to the E-commerce Recommendation System API");
