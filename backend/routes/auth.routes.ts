@@ -1,6 +1,7 @@
 import { Router } from "express";
 import dotenv from "dotenv";
 import { loginFn, logoutFn, refreshFn, registerFn, getUserById } from "../controllers/auth.controller";
+import errorHandler from "../middleware/errorHandler.middleware";
 
 dotenv.config();
 
@@ -36,7 +37,7 @@ const router = Router();
  *       500:
  *         description: Error registering user
  */
-router.post("/register", registerFn);
+router.post("/register", registerFn,errorHandler);
 
 /**
  * @swagger
@@ -63,7 +64,7 @@ router.post("/register", registerFn);
  *       500:
  *         description: Error logging in
  */
-router.post("/login", loginFn);
+router.post("/login", loginFn,errorHandler);
 
 /**
  * @swagger
@@ -88,7 +89,7 @@ router.post("/login", loginFn);
  *       500:
  *         description: Error refreshing token
  */
-router.post("/refresh", refreshFn);
+router.post("/refresh", refreshFn,errorHandler);
 
 /**
  * @swagger
@@ -111,7 +112,7 @@ router.post("/refresh", refreshFn);
  *       500:
  *         description: Error logging out
  */
-router.post("/logout", logoutFn);
+router.post("/logout", logoutFn,errorHandler);
 
 /**
  * @swagger

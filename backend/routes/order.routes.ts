@@ -1,6 +1,7 @@
 import { Router } from "express";
 import authenticateToken from "../middleware/auth.middleware";
 import { getOrder, placeOrder } from "../controllers/order.controller";
+import errorHandler from "../middleware/errorHandler.middleware";
 
 const router = Router();
 
@@ -29,7 +30,7 @@ const router = Router();
  *       500:
  *         description: Error placing order
  */
-router.post("/", authenticateToken, placeOrder);
+router.post("/", authenticateToken, placeOrder,errorHandler);
 
 /**
  * @swagger
@@ -45,6 +46,6 @@ router.post("/", authenticateToken, placeOrder);
  *       500:
  *         description: Error fetching orders
  */
-router.get("/", authenticateToken, getOrder);
+router.get("/", authenticateToken, getOrder,errorHandler);
 
 export default router;

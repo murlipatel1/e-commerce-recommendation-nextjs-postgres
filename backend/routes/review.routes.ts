@@ -1,6 +1,7 @@
 import { Router} from "express";
 import authenticateToken from "../middleware/auth.middleware";
 import { addReview, getReviewById } from "../controllers/review.controller";
+import errorHandler from "../middleware/errorHandler.middleware";
 
 const router = Router();
 
@@ -22,9 +23,7 @@ const router = Router();
  *       404:
  *         description: Product not found
  */
-router.get("/:product_id",
-     getReviewById
-);
+router.get("/:product_id",getReviewById);
 
 /**
  * @swagger
@@ -53,8 +52,6 @@ router.get("/:product_id",
  *       401:
  *         description: Unauthorized
  */
-router.post("/", authenticateToken, 
-  addReview
-);
+router.post("/", authenticateToken, addReview,errorHandler);
 
 export default router;

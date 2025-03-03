@@ -1,6 +1,7 @@
 import { Router} from "express";
 import authenticateToken from "../middleware/auth.middleware";
 import { getRecommendationById, updateRecommendationById } from "../controllers/recommendation.controller";
+import errorHandler from "../middleware/errorHandler.middleware";
 
 const router = Router();
 
@@ -45,6 +46,6 @@ router.get("/", authenticateToken, getRecommendationById);
  *       500:
  *         description: Error updating recommendation
  */
-router.post("/update", authenticateToken, updateRecommendationById);
+router.post("/update", authenticateToken, updateRecommendationById,errorHandler);
 
 export default router;

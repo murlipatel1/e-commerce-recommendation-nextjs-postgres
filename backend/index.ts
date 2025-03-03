@@ -11,7 +11,6 @@ import productRoutes from "./routes/product.routes";
 import orderRoutes from "./routes/order.routes";
 import reviewRoutes from "./routes/review.routes";
 import recommendationRoutes from "./routes/recommendation.routes";
-import errorHandler from "./middleware/errorHandler.middleware";
 
 config();
 const app = express();
@@ -63,9 +62,6 @@ app.use("/api/v1/recommendations", recommendationRoutes);
 app.get("/", (req, res) => {
     res.send("Welcome to the E-commerce Recommendation System API");
 });
-
-// Use custom error handler middleware
-app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

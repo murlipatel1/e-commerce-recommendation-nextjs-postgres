@@ -2,6 +2,7 @@ import { Router} from "express";
 import authenticateToken from "../middleware/auth.middleware";
 import { uploadPhoto, uploadToImageKit } from "../middleware/upload.middleware";
 import { creatProduct, deleteProduct, getAllProducts, getProductById, updateProduct } from "../controllers/product.controller";
+import errorHandler from "../middleware/errorHandler.middleware";
 
 const router = Router();
 
@@ -39,7 +40,7 @@ const router = Router();
  *       403:
  *         description: Unauthorized
  */
-router.post("/", uploadPhoto, uploadToImageKit, authenticateToken, creatProduct);
+router.post("/", uploadPhoto, uploadToImageKit, authenticateToken, creatProduct,errorHandler);
 
 /**
  * @swagger
@@ -93,7 +94,7 @@ router.get("/:id", getProductById);
  *       403:
  *         description: Unauthorized
  */
-router.delete("/:id", authenticateToken, deleteProduct);
+router.delete("/:id", authenticateToken, deleteProduct,errorHandler);
 
 /**
  * @swagger
@@ -132,6 +133,6 @@ router.delete("/:id", authenticateToken, deleteProduct);
  *       403:
  *         description: Unauthorized
  */
-router.put("/:id", uploadPhoto, uploadToImageKit, authenticateToken, updateProduct);
+router.put("/:id", uploadPhoto, uploadToImageKit, authenticateToken, updateProduct,errorHandler);
 
 export default router;
