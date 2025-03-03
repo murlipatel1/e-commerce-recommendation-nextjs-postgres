@@ -1,10 +1,9 @@
 import { Router, Request, Response } from "express";
 import { QueryTypes } from "sequelize";
 import sequelize from "../config/db";
+import { AuthenticatedRequest } from "../utils/type";
 
-interface AuthenticatedRequest extends Request {
-    user?: { id: number };
-}
+
 
 const router = Router();
 

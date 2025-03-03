@@ -2,7 +2,7 @@ import { Response, NextFunction } from "express";
 import { verify } from "jsonwebtoken";
 import { AuthenticatedRequest } from "../utils/type";
 
-function authenticateToken(req: AuthenticatedRequest, res: Response, next: NextFunction): void {
+export default function authenticateToken(req: AuthenticatedRequest, res: Response, next: NextFunction): void {
     const token = req.cookies?.accessToken || req.headers["authorization"]?.split(" ")[1];
 
     if (!token) {
@@ -21,6 +21,3 @@ function authenticateToken(req: AuthenticatedRequest, res: Response, next: NextF
         next();
     });
 }
-
-
-export default authenticateToken;
