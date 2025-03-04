@@ -5,14 +5,14 @@ import {
   getProductPerformance, 
   getOrderStats, 
   getRecommendationsData 
-} from "../controllers/admin.controller";
+} from "../controllers/dashboard.controller";
 import authenticateToken from "../middleware/auth.middleware";
 
 const router = Router();
 
 /**
  * @swagger
- * /api/v1/admin/sales:
+ * /api/v1/dashboard/sales:
  *   get:
  *     summary: Get sales data
  *     tags: [Admin Dashboard]
@@ -28,7 +28,7 @@ router.get("/sales", authenticateToken, getSalesData);
 
 /**
  * @swagger
- * /api/v1/admin/registrations:
+ * /api/v1/dashboard/registrations:
  *   get:
  *     summary: Get user registrations data
  *     tags: [Admin Dashboard]
@@ -44,7 +44,7 @@ router.get("/registrations", authenticateToken, getUserRegistrations);
 
 /**
  * @swagger
- * /api/v1/admin/product-performance:
+ * /api/v1/dashboard/product-performance:
  *   get:
  *     summary: Get product performance data
  *     tags: [Admin Dashboard] 
@@ -60,7 +60,7 @@ router.get("/product-performance", authenticateToken, getProductPerformance);
 
 /**
  * @swagger
- * /api/v1/admin/order-stats:
+ * /api/v1/dashboard/order-stats:
  *   get:
  *     summary: Get order statistics
  *     tags: [Admin Dashboard]
@@ -76,7 +76,7 @@ router.get("/order-stats", authenticateToken, getOrderStats);
 
 /**
  * @swagger
- * /api/v1/admin/recommendations:
+ * /api/v1/dashboard/recommendations:
  *   get:
  *     summary: Get recommendations data
  *     tags: [Admin Dashboard]

@@ -11,7 +11,7 @@ import productRoutes from "./routes/product.routes";
 import orderRoutes from "./routes/order.routes";
 import reviewRoutes from "./routes/review.routes";
 import recommendationRoutes from "./routes/recommendation.routes";
-import adminRoutes from "./routes/admin.routes";
+import dashboardRoutes from "./routes/dashboard.routes";
 
 config();
 const app = express();
@@ -21,8 +21,8 @@ app.use(helmet());
 
 // Rate limiting
 const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // limit each IP to 100 requests per windowMs
+    windowMs: 15 * 60 * 10000, // 15 minutes
+    max: 1000, // limit each IP to 100 requests per windowMs
 });
 app.use(limiter);
 
@@ -59,7 +59,7 @@ app.use("/api/v1/products", productRoutes);
 app.use("/api/v1/orders", orderRoutes);
 app.use("/api/v1/reviews", reviewRoutes);
 app.use("/api/v1/recommendations", recommendationRoutes);
-app.use("/api/v1/admin", adminRoutes);
+app.use("/api/v1/dashboard", dashboardRoutes);
 
 app.get("/", (req, res) => {
     res.send("Welcome to the E-commerce Recommendation System API");

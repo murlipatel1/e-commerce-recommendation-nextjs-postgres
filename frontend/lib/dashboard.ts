@@ -1,28 +1,28 @@
 import api from './api';
 
 export const getSalesData = async () => {
-  const response = await api.get('/admin/sales');
+  const response = await api.get('/dashboard/sales');
   return response.data;
 };
 
 export const getUserRegistrations = async () => {
-  const response = await api.get('/admin/registrations');
+  const response = await api.get('/dashboard/registrations');
   return response.data;
 };
 
 export const getProductPerformance = async () => {
-  const response = await api.get('/admin/product-performance');
+  const response = await api.get('/dashboard/product-performance');
   console.log("product performance", response.data);
   return response.data;
 };
 
 export const getOrderStats = async () => {
-    const response = await api.get('/admin/order-stats');
+    const response = await api.get('/dashboard/order-stats');
     return response.data;
   };
   
   export const getRecommendationsData = async () => {
-    const response = await api.get('/admin/recommendations');
+    const response = await api.get('/dashboard/recommendations');
     return response.data;
   };
   
