@@ -155,9 +155,10 @@ export default function DashboardPage() {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="container mx-auto px-4 py-8 text-black">
-      <h1 className="text-2xl font-bold mb-6">Admin Dashboard</h1>
-      <div className="right-0 mb-4 text-white">
+    <div className="container mx-auto px-4 py-8 ">
+      <div className='flex justify-between items-center mb-4'>
+      <h1 className="text-2xl font-bold mb-6 text-white">Admin Dashboard</h1>
+      <div className=" right-0 mb-4 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded shadow">
         <PDFDownloadLink
           document={<MyDocument
             salesData={salesData}
@@ -172,10 +173,10 @@ export default function DashboardPage() {
           {({ loading }) => (loading ? 'Loading document...' : 'Download PDF')}
         </PDFDownloadLink>
       </div>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div className="bg-white shadow-md rounded-lg p-6">
-          <h1>Admin E commerce Generated Data</h1>
-          <h2 className="text-xl font-bold mb-4">Sales Data</h2>
+          <h2 className="text-xl font-bold mb-4 text-black">Sales Data</h2>
           <div id="salesChart" ref={salesChartRef}>
             <Bar
               data={{
@@ -192,7 +193,7 @@ export default function DashboardPage() {
           </div>
         </div>
         <div className="bg-white shadow-md rounded-lg p-6">
-          <h2 className="text-xl font-bold mb-4">User Registrations</h2>
+          <h2 className="text-xl font-bold mb-4 text-black">User Registrations</h2>
           <div id="userRegistrationsChart" ref={userRegistrationsChartRef}>
             <Line
               data={{
@@ -209,7 +210,7 @@ export default function DashboardPage() {
           </div>
         </div>
         <div className="bg-white shadow-md rounded-lg p-6">
-          <h2 className="text-xl font-bold mb-4">Product Performance</h2>
+          <h2 className="text-xl font-bold mb-4 text-black">Product Performance</h2>
           <div id="productPerformanceChart" ref={productPerformanceChartRef}>
             <Pie
               data={{
@@ -233,7 +234,7 @@ export default function DashboardPage() {
           </div>
         </div>
         <div className="bg-white shadow-md rounded-lg p-6">
-          <h2 className="text-xl font-bold mb-4">Order Status</h2>
+          <h2 className="text-xl font-bold mb-4 text-black">Order Status</h2>
           <div id="orderStatsChart" ref={orderStatsChartRef}>
             <Doughnut
               data={{
@@ -255,7 +256,7 @@ export default function DashboardPage() {
           </div>
         </div>
         <div className="bg-white shadow-md rounded-lg p-6">
-          <h2 className="text-xl font-bold mb-4">Recommendations</h2>
+          <h2 className="text-xl font-bold mb-4 text-black">Recommendations</h2>
           <div id="recommendationsChart" ref={recommendationsChartRef}>
             <Bar
               data={{
@@ -272,7 +273,7 @@ export default function DashboardPage() {
           </div>
         </div>
         <div className="bg-white shadow-md rounded-lg p-6">
-          <h2 className="text-xl font-bold mb-4">Product Ratings</h2>
+          <h2 className="text-xl font-bold mb-4 text-black">Product Ratings</h2>
           <div id="productRatingsChart" ref={productRatingsChartRef}>
             <Radar
               data={{
