@@ -5,6 +5,7 @@ CREATE TABLE users (
     email VARCHAR(255) UNIQUE NOT NULL,
     password TEXT NOT NULL,
     role VARCHAR(20) CHECK (role IN ('user', 'admin')) DEFAULT 'user',
+    photo_url TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

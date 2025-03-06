@@ -6,6 +6,7 @@ CREATE TABLE users (
     password TEXT NOT NULL,
     role VARCHAR(20) CHECK (role IN ('user', 'admin')) DEFAULT 'user',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    photo_url TEXT,
     is_deleted BOOLEAN DEFAULT FALSE
 );
 
