@@ -36,7 +36,7 @@ export interface User {
   }
 
   export interface Order {
-    id: number;
+    id: string;
     user_id: number;
     total_price: number;
     status: 'pending' | 'delivered' | 'cancelled'| 'shipped';

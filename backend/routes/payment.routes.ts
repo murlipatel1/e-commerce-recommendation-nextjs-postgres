@@ -1,6 +1,6 @@
 import { Router } from "express";
 import authenticateToken from "../middleware/auth.middleware";
-import { processPayment, getPayments } from "../controllers/payment.controller";
+import { processPayment, confirmPayment, getPayments } from "../controllers/payment.controller";
 import errorHandler from "../middleware/errorHandler.middleware";
 
 /**
@@ -57,6 +57,7 @@ import errorHandler from "../middleware/errorHandler.middleware";
 const router = Router();
 
 router.post("/", authenticateToken, processPayment, errorHandler);
-router.get("/", authenticateToken, getPayments, errorHandler);
+router.get("/confirm", authenticateToken, confirmPayment, errorHandler);
+router.get("/history", authenticateToken, getPayments, errorHandler);
 
 export default router;

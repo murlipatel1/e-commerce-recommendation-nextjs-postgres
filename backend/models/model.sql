@@ -32,9 +32,24 @@ CREATE TABLE payments (
     payment_method VARCHAR(50) CHECK (payment_method IN ('credit_card', 'debit_card', 'paypal', 'upi', 'cod')),
     transaction_id VARCHAR(255) UNIQUE NOT NULL,
     status VARCHAR(20) CHECK (status IN ('pending', 'completed', 'failed')) DEFAULT 'pending',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
+    -- Shipping Address
+    shipping_name VARCHAR(255) NOT NULL,
+    shipping_address TEXT NOT NULL,
+    shipping_city VARCHAR(100) NOT NULL,
+    shipping_state VARCHAR(100),
+    shipping_zip VARCHAR(20) NOT NULL,
+    shipping_country VARCHAR(100) NOT NULL,
+
+    -- Billing Address
+    billing_name VARCHAR(255) NOT NULL,
+    billing_address TEXT NOT NULL,
+    billing_city VARCHAR(100) NOT NULL,
+    billing_state VARCHAR(100),
+    billing_zip VARCHAR(20) NOT NULL,
+    billing_country VARCHAR(100) NOT NULL
+);
 
 
 -- Refresh Tokens Table

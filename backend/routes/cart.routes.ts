@@ -1,6 +1,6 @@
 import { Router } from "express";
 import authenticateToken from "../middleware/auth.middleware";
-import { addToCart, getCart, removeFromCart } from "../controllers/cart.controller";
+import { addToCart, clearCart, getCart, removeFromCart } from "../controllers/cart.controller";
 import errorHandler from "../middleware/errorHandler.middleware";
 
 /**
@@ -86,5 +86,5 @@ const router = Router();
 router.post("/", authenticateToken, addToCart, errorHandler);
 router.get("/", authenticateToken, getCart, errorHandler);
 router.delete("/", authenticateToken, removeFromCart, errorHandler);
-
+router.delete("/clear", authenticateToken, clearCart);
 export default router;

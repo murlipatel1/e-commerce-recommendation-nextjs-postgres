@@ -4,30 +4,88 @@ import sequelize from "../config/db";
 import { AuthenticatedRequest } from "../utils/type";
 
 // Process payment
-export const processPayment = async (req: AuthenticatedRequest, res: Response) => {
-    const { order_id, payment_method, transaction_id } = req.body;
+// export const processPayment = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+//     const { order_id, payment_method, transaction_id } = req.body;
+
+//     if (!order_id || !payment_method) {
+//         res.status(400).json({ message: "Order ID and payment method are required" });
+//         return;
+//     }
+
+//     try {
+//         // Generate transaction ID if not provided
+//         const txnId = transaction_id ?? `txn_${Date.now()}`;
+
+//         await sequelize.query(
+//             `INSERT INTO payments (order_id, user_id, payment_method, transaction_id, status) 
+//             VALUES ($1, $2, $3, $4, 'completed') RETURNING *`,
+//             {
+//                 bind: [order_id, req.user?.id, payment_method, txnId],
+//                 type: QueryTypes.INSERT,
+//             }
+//         );
+
+//         // Update order status to "shipped"
+//         await sequelize.query(`UPDATE orders SET status = 'shipped' WHERE id = $1`, {
+//             bind: [order_id],
+//             type: QueryTypes.UPDATE,
+//         });
+
+//         res.status(200).json({ message: "Payment successful", transaction_id: txnId });
+//     } catch (error) {
+//         console.error("Error processing payment:", error);
+//         res.status(500).json({ message: "Error processing payment", error: (error as Error).message });
+//     }
+// };
+
+export const processPayment = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+    const { 
+        order_id, 
+        payment_method, 
+        transaction_id, 
+        shipping_name, shipping_address, shipping_city, shipping_state, shipping_zip, shipping_country,
+        billing_name, billing_address, billing_city, billing_state, billing_zip, billing_country
+    } = req.body;
+
+    if (!order_id || !payment_method || !shipping_name || !billing_name) {
+        res.status(400).json({ message: "Order ID, payment method, and addresses are required" });
+        return;
+    }
 
     try {
+        // Generate transaction ID if not provided
+        const txnId = transaction_id ?? `txn_${Date.now()}`;
+
         await sequelize.query(
-            `INSERT INTO payments (order_id, user_id, payment_method, transaction_id, status) 
-            VALUES ($1, $2, $3, $4, 'completed') RETURNING *`,
+            `INSERT INTO payments (order_id, user_id, payment_method, transaction_id, status, 
+                                  shipping_name, shipping_address, shipping_city, shipping_state, shipping_zip, shipping_country, 
+                                  billing_name, billing_address, billing_city, billing_state, billing_zip, billing_country) 
+             VALUES ($1, $2, $3, $4, 'completed', 
+                     $5, $6, $7, $8, $9, $10, 
+                     $11, $12, $13, $14, $15, $16) RETURNING *`,
             {
-                bind: [order_id, req.user?.id, payment_method, transaction_id],
+                bind: [
+                    order_id, req.user?.id, payment_method, txnId, 
+                    shipping_name, shipping_address, shipping_city, shipping_state, shipping_zip, shipping_country, 
+                    billing_name, billing_address, billing_city, billing_state, billing_zip, billing_country
+                ],
                 type: QueryTypes.INSERT,
             }
         );
 
-        // Update order status to "completed"
+        // Update order status to "shipped"
         await sequelize.query(`UPDATE orders SET status = 'shipped' WHERE id = $1`, {
             bind: [order_id],
             type: QueryTypes.UPDATE,
         });
 
-        res.status(200).json({ message: "Payment successful" });
+        res.status(200).json({ message: "Payment successful", transaction_id: txnId });
     } catch (error) {
+        console.error("Error processing payment:", error);
         res.status(500).json({ message: "Error processing payment", error: (error as Error).message });
     }
 };
+
 
 // View payment history
 export const getPayments = async (req: AuthenticatedRequest, res: Response) => {
@@ -40,5 +98,31 @@ export const getPayments = async (req: AuthenticatedRequest, res: Response) => {
         res.json(payments);
     } catch (error) {
         res.status(500).json({ message: "Error fetching payments", error: (error as Error).message });
+    }
+};
+
+// Confirm payment
+
+// Confirm payment after successful transaction
+export const confirmPayment = async (req: AuthenticatedRequest, res: Response) => {
+    const { order_id, transaction_id } = req.query;
+
+    try {
+        // Update payment status to "completed"
+        await sequelize.query(
+            `UPDATE payments SET status = 'completed' WHERE order_id = $1 AND transaction_id = $2`,
+            { bind: [order_id, transaction_id], type: QueryTypes.UPDATE }
+        );
+
+        // Update order status to "shipped"
+        await sequelize.query(`UPDATE orders SET status = 'shipped' WHERE id = $1`, {
+            bind: [order_id],
+            type: QueryTypes.UPDATE,
+        });
+
+        res.status(200).json({ message: "Payment confirmed successfully" });
+
+    } catch (error) {
+        res.status(500).json({ message: "Error confirming payment", error: (error as Error).message });
     }
 };

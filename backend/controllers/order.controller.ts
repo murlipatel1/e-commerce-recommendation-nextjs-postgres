@@ -12,9 +12,11 @@ export const placeOrder =async (req: AuthenticatedRequest, res: Response) => {
             "INSERT INTO orders (user_id, total_price, status) VALUES ($1, $2, 'pending') RETURNING *",
             {
                 bind: [user_id, total_price],
-                type: QueryTypes.INSERT
+                type: QueryTypes.SELECT
             }
         );
+        console.log("Order Created controller:", result); // ✅ Debugging log
+        
         res.status(201).json(result[0]);
     } catch (error) {
         res.status(500).json({ message: "Error placing order", error: (error as Error).message });

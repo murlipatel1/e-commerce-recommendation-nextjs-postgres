@@ -63,8 +63,9 @@ export const getOrders = async () => {
   return response.data;
 };
 
-export const createOrder = async (order: { user_id: string; total_price: number }) => {
+export const createOrder = async (order: { user_id: string; total_price: number }):Promise<Order> => {
   const response = await api.post<Order>('/orders', order);
+  console.log("Order API Response:", response.data); // ✅ Debugging log
   return response.data;
 };
 

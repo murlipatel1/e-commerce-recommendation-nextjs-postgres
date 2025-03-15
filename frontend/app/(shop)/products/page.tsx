@@ -1,28 +1,33 @@
-"use client"
-import { useEffect, useState } from 'react';
-import { Product } from '@/types';
-import { getProducts, createOrder, updateRecommendation } from '@/lib/auth';
-import ProductCard from '@/components/ProductCard';
-import CartModal from '@/components/CartModal';
-import { useAuth } from '@/contexts/AuthContext';
-import Slider from 'rc-slider';
-import 'rc-slider/assets/index.css';
+"use client";
+import { useEffect, useState } from "react";
+import { Product } from "@/types";
+import { getProducts, createOrder, updateRecommendation } from "@/lib/auth";
+import { fetchCart, addToCart, removeFromCart, clearCart } from "@/lib/cart";
+import ProductCard from "@/components/ProductCard";
+import CartModal from "@/components/CartModal";
+import { useAuth } from "@/contexts/AuthContext";
+import Slider from "rc-slider";
+import "rc-slider/assets/index.css";
+import { useRouter } from "next/navigation"; // Import useRouter
 
 export default function ProductsPage() {
+  const router = useRouter(); // Initialize router
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [cart, setCart] = useState<{ product: Product; quantity: number }[]>([]);
+  const [error, setError] = useState("");
+  const [cart, setCart] = useState<{ id: string; product_id: string; name: string; price: number; quantity: number; photo_url: string; total_price: number }[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 10000]);
   const { user } = useAuth();
 
   useEffect(() => {
     loadProducts();
+    loadCart();
   }, []);
 
+  // Fetch products
   const loadProducts = async () => {
     try {
       const data = await getProducts();
@@ -34,30 +39,35 @@ export default function ProductsPage() {
     }
   };
 
-  const addToCart = (product: Product) => {
-    setCart((prevCart) => {
-      const existingProduct = prevCart.find((item) => item.product.id === product.id);
-      if (existingProduct) {
-        return prevCart.map((item) =>
-          item.product.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
-        );
-      } else {
-        return [...prevCart, { product, quantity: 1 }];
-      }
-    });
+  // Fetch cart from backend
+  const loadCart = async () => {
+    try {
+      const cartItems = await fetchCart();
+      setCart(cartItems);
+    } catch (err) {
+      if (err instanceof Error) setError(err.message);
+    }
   };
 
-  const deleteFromCart = (productId: string) => {
-    setCart((prevCart) => {
-      const existingProduct = prevCart.find((item) => item.product.id === productId);
-      if (existingProduct && existingProduct.quantity > 1) {
-        return prevCart.map((item) =>
-          item.product.id === productId ? { ...item, quantity: item.quantity - 1 } : item
-        );
-      } else {
-        return prevCart.filter((item) => item.product.id !== productId);
-      }
-    });
+  // Add item to cart (API call)
+  const handleAddToCart = async (product: Product) => {
+    try {
+      await addToCart(product.id, 1);
+      await loadCart(); // Refresh cart from backend
+    } catch (err) {
+      if (err instanceof Error) setError(err.message);
+    }
+  };
+
+  // Remove item from cart (API call)
+  const handleRemoveFromCart = async (productId: string) => {
+    try {
+      console.log("Calling removeFromCart with productId:", productId);
+      await removeFromCart(productId);
+      await loadCart(); // Refresh cart from backend
+    } catch (err) {
+      if (err instanceof Error) setError(err.message);
+    }
   };
 
   const toggleCartModal = () => {
@@ -66,17 +76,22 @@ export default function ProductsPage() {
 
   const handlePlaceOrder = async () => {
     if (!user) {
-      alert('Please log in to place an order.');
+      alert("Please log in to place an order.");
       return;
     }
 
-    const total_price = cart.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
+    const total_price = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+    const total_price_final=(total_price*1.12).toFixed(2);
 
     try {
-      await createOrder({ user_id: user.id, total_price: total_price * 1.12 });
-      setCart([]);
+      const orderResponse= await createOrder({ user_id: user.id, total_price: total_price * 1.12 });
+      console.log("Order Response:", orderResponse);
+      await clearCart(); // Clear cart from frontend
+      await loadCart(); // Clear cart from backend
       toggleCartModal();
-      alert('Order placed successfully!');
+      alert("Order placed successfully!");
+      const order_id = orderResponse.id;
+      router.push(`/payment?order_id=${order_id}&total_price=${total_price_final}`); 
     } catch (err) {
       if (err instanceof Error) setError(err.message);
     }
@@ -118,75 +133,67 @@ export default function ProductsPage() {
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold mb-6">Products</h1>
       <div className="mb-4 flex justify-between items-center">
-        <span className="text-lg font-semibold">Cart: {cart.reduce((acc, item) => acc + item.quantity, 0)} items</span>
-        <button
-          onClick={toggleCartModal}
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-        >
+        <span className="text-lg font-semibold">
+          Cart: {cart.reduce((acc, item) => acc + item.quantity, 0)} items
+        </span>
+        <button onClick={toggleCartModal} className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
           View Cart
         </button>
       </div>
-      <div className='grid md:grid-cols-3 sm:grid-cols-1 gap-4'>
-      <div className="mb-4">
-        <label className="block text-sm font-medium mb-2">Filter by Category:</label>
-        <select
-          value={selectedCategory || ''}
-          onChange={(e) => handleCategoryChange(e.target.value || null)}
-          className="w-full px-3 py-2 border rounded text-black"
-        >
-          <option value="">All Categories</option>
-          {[...new Set(products.map((product) => product.category))].map((category) => (
-            <option key={category} value={category}>
-              {category}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="mb-4 ">
-        <label className="block text-sm font-medium mb-2">Search:</label>
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={handleSearchChange}
-          className="w-full px-3 py-2 border rounded text-black"
-          placeholder="Search products..."
-        />
-      </div>
-      <div className="mb-4 ">
-        <label className="block text-sm font-medium mb-2">Price Range:</label>
-        <Slider
-          range
-          min={0}
-          max={1000}
-          defaultValue={[0, 1000]}
-          value={priceRange}
-          onChange={handlePriceRangeChange}
-          className="mb-4"
-        />
-        <div className="flex justify-between text-sm text-white ">
-          <span>${priceRange[0]}</span>
-          <span>${priceRange[1]}</span>
+      <div className="grid md:grid-cols-3 sm:grid-cols-1 gap-4">
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-2">Filter by Category:</label>
+          <select
+            value={selectedCategory || ""}
+            onChange={(e) => handleCategoryChange(e.target.value || null)}
+            className="w-full px-3 py-2 border rounded text-black"
+          >
+            <option value="">All Categories</option>
+            {[...new Set(products.map((product) => product.category))].map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
+          </select>
         </div>
-      </div>
+        <div className="mb-4 ">
+          <label className="block text-sm font-medium mb-2">Search:</label>
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={handleSearchChange}
+            className="w-full px-3 py-2 border rounded text-black"
+            placeholder="Search products..."
+          />
+        </div>
+        <div className="mb-4 ">
+          <label className="block text-sm font-medium mb-2">Price Range:</label>
+          <Slider
+            range
+            min={0}
+            max={1000}
+            defaultValue={[0, 1000]}
+            value={priceRange}
+            onChange={handlePriceRangeChange}
+            className="mb-4"
+          />
+          <div className="flex justify-between text-sm text-white ">
+            <span>${priceRange[0]}</span>
+            <span>${priceRange[1]}</span>
+          </div>
+        </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredProducts.map((product) => (
           <ProductCard
             key={product.id}
             product={product}
-            onAddToCart={addToCart}
+            onAddToCart={() => handleAddToCart(product)}
             onClick={() => handleProductClick(product.category, product.id)}
           />
         ))}
       </div>
-      {isCartOpen && (
-        <CartModal
-          cart={cart}
-          onClose={toggleCartModal}
-          onDelete={deleteFromCart}
-          onPlaceOrder={handlePlaceOrder}
-        />
-      )}
+      {isCartOpen && <CartModal cart={cart} onClose={toggleCartModal} onDelete={handleRemoveFromCart} onPlaceOrder={handlePlaceOrder} />}
     </div>
   );
 }
