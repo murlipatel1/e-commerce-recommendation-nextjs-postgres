@@ -8,7 +8,7 @@ export default function Home() {
   const { user } = useAuth();
 
   useEffect(() => {
-    // console.log('Current user:', user);
+    
   }, [user]);
 
   return (

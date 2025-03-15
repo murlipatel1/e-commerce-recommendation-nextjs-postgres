@@ -48,8 +48,6 @@ export const getCart = async (req: AuthenticatedRequest, res: Response) => {
 // Remove item from cart
 export const removeFromCart = async (req: AuthenticatedRequest, res: Response): Promise<any> => {
     const { product_id } = req.query;
-    console.log("Received product_id:", product_id);
-    console.log("User ID:", req.user?.id);
 
     try {
         // Fetch the product's quantity from the cart using `product_id`

@@ -12,7 +12,7 @@ export const getUserRegistrations = async () => {
 
 export const getProductPerformance = async () => {
   const response = await api.get('/dashboard/product-performance');
-  console.log("product performance", response.data);
+
   return response.data;
 };
 

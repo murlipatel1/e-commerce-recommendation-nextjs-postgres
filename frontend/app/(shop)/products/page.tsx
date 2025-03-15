@@ -62,7 +62,7 @@ export default function ProductsPage() {
   // Remove item from cart (API call)
   const handleRemoveFromCart = async (productId: string) => {
     try {
-      console.log("Calling removeFromCart with productId:", productId);
+     
       await removeFromCart(productId);
       await loadCart(); // Refresh cart from backend
     } catch (err) {
@@ -85,7 +85,7 @@ export default function ProductsPage() {
 
     try {
       const orderResponse= await createOrder({ user_id: user.id, total_price: total_price * 1.12 });
-      console.log("Order Response:", orderResponse);
+      
       await clearCart(); // Clear cart from frontend
       await loadCart(); // Clear cart from backend
       toggleCartModal();

@@ -24,9 +24,7 @@ export const addToCart = async (product_id: string, quantity: number): Promise<{
 
 export const removeFromCart = async (product_id: string): Promise<{ message: string }> => {
     try {
-      console.log("Removing product from cart:", product_id);
-      const response = await api.delete(`/cart?product_id=${product_id}`); // ✅ Use product_id
-      console.log("Response:", response.data);
+      const response = await api.delete(`/cart?product_id=${product_id}`);
       return response.data;
     } catch (error) {
       console.error("Error removing item from cart:", error);

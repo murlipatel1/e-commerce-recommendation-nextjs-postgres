@@ -48,7 +48,7 @@ export const createProduct = async (product:FormData) => {
   return response.data;
 };
 
-export const deleteProduct = async (id: number) => {
+export const deleteProduct = async (id: string) => {
   const response = await api.delete(`/products/${id}`);
   return response.data;
 };
@@ -65,7 +65,7 @@ export const getOrders = async () => {
 
 export const createOrder = async (order: { user_id: string; total_price: number }):Promise<Order> => {
   const response = await api.post<Order>('/orders', order);
-  console.log("Order API Response:", response.data); // ✅ Debugging log
+  
   return response.data;
 };
 

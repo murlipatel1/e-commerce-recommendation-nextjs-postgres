@@ -16,7 +16,7 @@ export default function authenticateToken(req: AuthenticatedRequest, res: Respon
             res.status(403).json({ message: "Invalid token" });
             return;
         }
-        console.log("decoded token", decoded);
+    
         req.user = decoded as { id: number; email: string; role: string };
         next();
     });

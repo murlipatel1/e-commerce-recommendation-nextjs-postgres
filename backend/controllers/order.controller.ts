@@ -15,8 +15,7 @@ export const placeOrder =async (req: AuthenticatedRequest, res: Response) => {
                 type: QueryTypes.SELECT
             }
         );
-        console.log("Order Created controller:", result); // ✅ Debugging log
-        
+     
         res.status(201).json(result[0]);
     } catch (error) {
         res.status(500).json({ message: "Error placing order", error: (error as Error).message });

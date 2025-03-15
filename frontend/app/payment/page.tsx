@@ -11,10 +11,6 @@ export default function PaymentPage() {
 
   const order_id = searchParams.get("order_id") ?? "";
   const total_price = searchParams.get("total_price") ?? "0";
-
-  console.log("Order ID:", order_id);
-  console.log("Total Price:", total_price);
-
   const [paymentMethod, setPaymentMethod] = useState("credit_card");
   const [shippingAddress, setShippingAddress] = useState({
     fullName: "",
@@ -104,8 +100,8 @@ export default function PaymentPage() {
         billing_country: billingAddress.country,
       };
   
-      const response = await processPayment(order_id, paymentMethod, shipping, billing);
-      console.log("Payment Response:", response);
+      await processPayment(order_id, paymentMethod, shipping, billing);
+
       alert("Payment Done Successfully");
       router.push("/products");
     } catch (err) {
