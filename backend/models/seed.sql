@@ -6,12 +6,12 @@ INSERT INTO users (id, name, email, password, role) VALUES
 (gen_random_uuid(), 'Ethan Hunt', 'ethan@example.com', 'hashed_password5', 'user');
 
 
-INSERT INTO refresh_tokens (user_id, token, expires_at) VALUES
-((SELECT id FROM users WHERE email = 'alice@example.com'), 'refresh_token_1', NOW() + INTERVAL '7 days'),
-((SELECT id FROM users WHERE email = 'bob@example.com'), 'refresh_token_2', NOW() + INTERVAL '7 days'),
-((SELECT id FROM users WHERE email = 'charlie@example.com'), 'refresh_token_3', NOW() + INTERVAL '7 days'),
-((SELECT id FROM users WHERE email = 'diana@example.com'), 'refresh_token_4', NOW() + INTERVAL '7 days'),
-((SELECT id FROM users WHERE email = 'ethan@example.com'), 'refresh_token_5', NOW() + INTERVAL '7 days');
+-- INSERT INTO refresh_tokens (user_id, token, expires_at) VALUES
+-- ((SELECT id FROM users WHERE email = 'alice@example.com'), 'refresh_token_1', NOW() + INTERVAL '7 days'),
+-- ((SELECT id FROM users WHERE email = 'bob@example.com'), 'refresh_token_2', NOW() + INTERVAL '7 days'),
+-- ((SELECT id FROM users WHERE email = 'charlie@example.com'), 'refresh_token_3', NOW() + INTERVAL '7 days'),
+-- ((SELECT id FROM users WHERE email = 'diana@example.com'), 'refresh_token_4', NOW() + INTERVAL '7 days'),
+-- ((SELECT id FROM users WHERE email = 'ethan@example.com'), 'refresh_token_5', NOW() + INTERVAL '7 days');
 
 
 INSERT INTO products (id, name, description, price, stock, category) VALUES

@@ -47,7 +47,7 @@ export default function ProductsPage() {
     });
   };
 
-  const deleteFromCart = (productId: number) => {
+  const deleteFromCart = (productId: string) => {
     setCart((prevCart) => {
       const existingProduct = prevCart.find((item) => item.product.id === productId);
       if (existingProduct && existingProduct.quantity > 1) {
@@ -82,7 +82,7 @@ export default function ProductsPage() {
     }
   };
 
-  const handleProductClick = async (category: string, product_id: number) => {
+  const handleProductClick = async (category: string, product_id: string) => {
     try {
       await updateRecommendation(category, product_id);
     } catch (err) {

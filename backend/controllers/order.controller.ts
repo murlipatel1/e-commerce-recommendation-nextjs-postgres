@@ -3,10 +3,6 @@ import { QueryTypes } from "sequelize";
 import sequelize from "../config/db";
 import { AuthenticatedRequest } from "../utils/type";
 
-
-
-const router = Router();
-
 // Place Order
 export const placeOrder =async (req: AuthenticatedRequest, res: Response) => {
     const { user_id, total_price } = req.body;
@@ -38,5 +34,3 @@ export const getOrder = async (req: AuthenticatedRequest, res: Response) => {
         res.status(500).json({ message: "Error fetching orders", error: (error as Error).message });
     }
 };
-
-export default router;

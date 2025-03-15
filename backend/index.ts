@@ -12,7 +12,8 @@ import orderRoutes from "./routes/order.routes";
 import reviewRoutes from "./routes/review.routes";
 import recommendationRoutes from "./routes/recommendation.routes";
 import dashboardRoutes from "./routes/dashboard.routes";
-
+import cartRoutes from "./routes/cart.routes";
+import paymentRoutes from "./routes/payment.routes";
 config();
 const app = express();
 
@@ -57,6 +58,8 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/products", productRoutes);
 app.use("/api/v1/orders", orderRoutes);
+app.use("/api/v1/payment",paymentRoutes);
+app.use("/api/v1/cart", cartRoutes);
 app.use("/api/v1/reviews", reviewRoutes);
 app.use("/api/v1/recommendations", recommendationRoutes);
 app.use("/api/v1/dashboard", dashboardRoutes);

@@ -73,7 +73,7 @@ export const getRecommendations = async () => {
   return response.data;
 };
 
-export const updateRecommendation = async (category: string, product_id: number) => {
+export const updateRecommendation = async (category: string, product_id: string) => {
   const response = await api.post('/recommendations/update', { category, product_id });
   return response.data;
 };
@@ -89,5 +89,40 @@ export const createReview = async (review: {
 
 export const getReviews = async (product_id: string) => {
   const response = await api.get<Review[]>(`/reviews/${product_id}`);
+  return response.data;
+};
+
+
+// Add item to cart
+export const addToCart = async (product_id: string, quantity: number) => {
+  const response = await api.post('/cart', { product_id, quantity });
+  return response.data;
+};
+
+// Get cart items
+export const getCart = async () => {
+  const response = await api.get<Product[]>('/cart');
+  return response.data;
+};
+
+// Remove item from cart
+export const removeFromCart = async (product_id: string) => {
+  const response = await api.delete('/cart', { data: { product_id } });
+  return response.data;
+};
+
+// Process payment
+export const processPayment = async (
+  order_id: number,
+  payment_method: string,
+  transaction_id: string
+) => {
+  const response = await api.post('/payments', { order_id, payment_method, transaction_id });
+  return response.data;
+};
+
+// Get payment history
+export const getPayments = async () => {
+  const response = await api.get('/payments');
   return response.data;
 };

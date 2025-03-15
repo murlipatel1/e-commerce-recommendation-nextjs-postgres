@@ -3,7 +3,7 @@ import { Product } from '@/types';
 interface CartModalProps {
   cart: { product: Product; quantity: number }[];
   onClose: () => void;
-  onDelete: (productId: number) => void;
+  onDelete: (productId: string) => void;
   onPlaceOrder: () => void;
 }
 
@@ -16,7 +16,7 @@ export default function CartModal({ cart, onClose, onDelete, onPlaceOrder }: Car
 
   const { subtotal, tax, total } = calculateTotal();
 
-  const handleDelete = (productId: number) => {
+  const handleDelete = (productId: string) => {
     onDelete(productId);
   };
 
