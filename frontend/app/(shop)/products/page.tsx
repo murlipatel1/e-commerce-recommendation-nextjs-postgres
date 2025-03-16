@@ -1,7 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Product } from "@/types";
-import { getProducts, createOrder, updateRecommendation } from "@/lib/auth";
+import { getProducts } from "@/lib/product";
+import { createOrder } from "@/lib/order";
+import { updateRecommendation } from "@/lib/recommendation";
 import { fetchCart, addToCart, removeFromCart, clearCart } from "@/lib/cart";
 import ProductCard from "@/components/ProductCard";
 import CartModal from "@/components/CartModal";

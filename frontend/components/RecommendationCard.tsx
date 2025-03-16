@@ -1,5 +1,5 @@
 "use client"
-import { getProductById } from '@/lib/auth';
+import { getProductById } from '@/lib/product';
 import { Product, Recommendation } from '@/types';
 import { useEffect, useState } from 'react';
 

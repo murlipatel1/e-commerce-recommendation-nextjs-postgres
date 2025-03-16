@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { createReview } from '@/lib/auth';
+import { createReview } from '@/lib/review';
 
 interface ReviewFormProps {
   productId: string;

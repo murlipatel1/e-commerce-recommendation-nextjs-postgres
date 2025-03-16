@@ -2,7 +2,8 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { Product, Review } from '@/types';
-import { getProductById, deleteProduct, updateProduct, getReviews } from '@/lib/auth';
+import { getProductById, deleteProduct, updateProduct } from '@/lib/product';
+import { getReviews } from '@/lib/review';
 import { useAuth } from '@/contexts/AuthContext';
 import ReviewForm from '@/components/ReviewForm';
 import Image from 'next/image';

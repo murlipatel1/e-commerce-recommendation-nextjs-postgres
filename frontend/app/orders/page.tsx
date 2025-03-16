@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Order } from "@/types";
-import { getOrders } from "@/lib/auth";
+import { getOrders } from "@/lib/order";
 import { getPayments } from "@/lib/payment";
 import OrderList from "@/components/OrderList";
 

@@ -1,7 +1,7 @@
 "use client"
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { createProduct } from '@/lib/auth';
+import { createProduct } from '@/lib/product';
 
 export default function NewProductPage() {
   const [name, setName] = useState('');

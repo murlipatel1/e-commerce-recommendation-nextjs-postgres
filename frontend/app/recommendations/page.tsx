@@ -1,7 +1,7 @@
 "use client"
 import { useEffect, useState } from 'react';
 import { Recommendation } from '@/types';
-import { getRecommendations } from '@/lib/auth';
+import { getRecommendations } from '@/lib/recommendation';
 import RecommendationCard from '@/components/RecommendationCard';
 
 export default function RecommendationsPage() {
