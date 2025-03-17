@@ -14,6 +14,7 @@ import recommendationRoutes from "./routes/recommendation.routes";
 import dashboardRoutes from "./routes/dashboard.routes";
 import cartRoutes from "./routes/cart.routes";
 import paymentRoutes from "./routes/payment.routes";
+import otpRoutes from "./routes/otp.routes";
 config();
 const app = express();
 
@@ -63,6 +64,7 @@ app.use("/api/v1/cart", cartRoutes);
 app.use("/api/v1/reviews", reviewRoutes);
 app.use("/api/v1/recommendations", recommendationRoutes);
 app.use("/api/v1/dashboard", dashboardRoutes);
+app.use("/api/v1/otp", otpRoutes);
 
 app.get("/", (req, res) => {
     res.send("Welcome to the E-commerce Recommendation System API");

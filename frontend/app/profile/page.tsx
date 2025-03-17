@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { getUserById } from '@/lib/auth';
 import Image from 'next/image';
+import ResetPassword from '@/components/ResetPassword';
 
 export default function ProfilePage() {
   const { user } = useAuth();
@@ -42,6 +43,7 @@ export default function ProfilePage() {
   if (error) return <div>Error: {error}</div>;
 
   return (
+    <>
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold mb-6">Profile</h1>
       <div className="bg-white shadow-md rounded-lg p-6">
@@ -63,6 +65,9 @@ export default function ProfilePage() {
           <p className="text-gray-600">{userInfo?.role}</p>
         </div>
       </div>
+      <ResetPassword userEmail={userInfo?.email || ''} />
     </div>
+    
+    </>
   );
 }

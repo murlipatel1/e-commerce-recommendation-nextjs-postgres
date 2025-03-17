@@ -6,6 +6,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { LoginData, RegisterData } from '@/types';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Link from 'next/link';
 
 interface CustomError extends Error {
   response?: {
@@ -93,7 +94,6 @@ export default function AuthForm({ mode }: { mode: 'login' | 'register' }) {
               />
             </div>
           </div>
-
           <div>
             <button
               type="submit"
@@ -104,6 +104,15 @@ export default function AuthForm({ mode }: { mode: 'login' | 'register' }) {
             </button>
           </div>
         </form>
+        <div className="text-sm text-center items-end">
+          {mode === 'login' ? (
+            <p className="text-center text-sm">
+              <Link href="/forgot" className="font-medium text-indigo-600 hover:text-indigo-500">
+                Forgot your password?
+              </Link>
+            </p>
+          ):("")}
+        </div>
         <ToastContainer />
       </div>
     </div>
