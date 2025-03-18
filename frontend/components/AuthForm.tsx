@@ -107,7 +107,7 @@ export default function AuthForm({ mode }: { mode: 'login' | 'register' }) {
         <div className="text-sm text-center items-end">
           {mode === 'login' ? (
             <p className="text-center text-sm">
-              <Link href="/forgot" className="font-medium text-indigo-600 hover:text-indigo-500">
+              <Link href="/forgot-password" className="font-medium text-indigo-600 hover:text-indigo-500">
                 Forgot your password?
               </Link>
             </p>

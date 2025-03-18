@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { getUserById } from '@/lib/auth';
 import Image from 'next/image';
-import ResetPassword from '@/components/ResetPassword';
+// import ResetPassword from '@/components/ResetPassword';
 
 export default function ProfilePage() {
   const { user } = useAuth();
@@ -65,7 +65,7 @@ export default function ProfilePage() {
           <p className="text-gray-600">{userInfo?.role}</p>
         </div>
       </div>
-      <ResetPassword userEmail={userInfo?.email || ''} />
+      {/* <ResetPassword userEmail={userInfo?.email || ''} /> */}
     </div>
     
     </>
