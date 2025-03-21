@@ -1,10 +1,10 @@
-import { Router, Request, Response } from "express";
+import {NextFunction, Response } from "express";
 import { QueryTypes } from "sequelize";
 import sequelize from "../config/db";
 import { AuthenticatedRequest } from "../utils/type";
 
 // Place Order
-export const placeOrder =async (req: AuthenticatedRequest, res: Response) => {
+export const placeOrder =async (req: AuthenticatedRequest, res: Response,next:NextFunction) => {
     const { user_id, total_price } = req.body;
 
     try {
@@ -18,12 +18,12 @@ export const placeOrder =async (req: AuthenticatedRequest, res: Response) => {
      
         res.status(201).json(result[0]);
     } catch (error) {
-        res.status(500).json({ message: "Error placing order", error: (error as Error).message });
+        next(error);
     }
 };
 
 // Get Orders of Logged-in User
-export const getOrder = async (req: AuthenticatedRequest, res: Response) => {
+export const getOrder = async (req: AuthenticatedRequest, res: Response,next:NextFunction) => {
     try {
         const result = await sequelize.query("SELECT * FROM orders WHERE user_id = $1", {
             bind: [req.user?.id],
@@ -32,6 +32,6 @@ export const getOrder = async (req: AuthenticatedRequest, res: Response) => {
 
         res.json(result);
     } catch (error) {
-        res.status(500).json({ message: "Error fetching orders", error: (error as Error).message });
+        next(error);
     }
 };

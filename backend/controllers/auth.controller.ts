@@ -19,7 +19,7 @@ const generateRefreshToken = (user: User) => {
 
 // Register User
 export const registerFn =
-    async (req: Request, res: Response) => {
+    async (req: Request, res: Response,next:NextFunction) => {
         try {
             const { name, email, password, role } = req.body;
             const hashedPassword = await hash(password, 10);
@@ -33,12 +33,12 @@ export const registerFn =
 
             res.status(201).json({ message: "User registered", user: result[0] });
         } catch (error) {
-            res.status(500).json({ message: "Error registering user", error: (error as Error).message });
+            next(error);
         }
     };
 
 // Login User
-export const loginFn = async (req: Request, res: Response) => {
+export const loginFn = async (req: Request, res: Response,next:NextFunction) => {
     try {
         const { email, password } = req.body;
         const result = await sequelize.query("SELECT * FROM users WHERE email = $1", {
@@ -66,12 +66,12 @@ export const loginFn = async (req: Request, res: Response) => {
 
         res.json({ accessToken, refreshToken });
     } catch (error) {
-        res.status(500).json({ message: "Error logging in", error: (error as Error).message });
+        next(error);
     }
 };
 
 // Refresh Token
-export const refreshFn =  async (req: Request, res: Response): Promise<any> => {
+export const refreshFn =  async (req: Request, res: Response,next:NextFunction): Promise<any> => {
     const { refreshToken } = req.body;
 
     if (!refreshToken) return res.status(403).json({ message: "Refresh token required" });
@@ -94,7 +94,7 @@ export const refreshFn =  async (req: Request, res: Response): Promise<any> => {
             res.json({ accessToken: newAccessToken });
         });
     } catch (error) {
-        res.status(500).json({ message: "Error refreshing token", error: (error as Error).message });
+        next(error);
     }
 };
 

@@ -1,11 +1,11 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { QueryTypes } from "sequelize";
 import sequelize from "../config/db";
 import { sendEmail } from "../utils/sendEmail";
 import crypto from "crypto";
 import bcrypt from "bcryptjs";
 
-export const forgotPassword = async (req: Request, res: Response): Promise<void> => {
+export const forgotPassword = async (req: Request, res: Response,next:NextFunction): Promise<void> => {
     const { email } = req.body;
 
     try {
@@ -35,11 +35,11 @@ export const forgotPassword = async (req: Request, res: Response): Promise<void>
 
         res.status(200).json({ message: "OTP sent to email" });
     } catch (error) {
-        res.status(500).json({ message: "Error sending OTP", error: (error as Error).message });
+        next(error);
     }
 };
 
-export const resetPassword = async (req: Request, res: Response): Promise<void> => {
+export const resetPassword = async (req: Request, res: Response,next:NextFunction): Promise<void> => {
     const { email, otp, newPassword } = req.body;
 
     try {
@@ -70,6 +70,6 @@ export const resetPassword = async (req: Request, res: Response): Promise<void> 
 
         res.status(200).json({ message: "Password reset successful" });
     } catch (error) {
-        res.status(500).json({ message: "Error resetting password", error: (error as Error).message });
+        next(error);
     }
 };

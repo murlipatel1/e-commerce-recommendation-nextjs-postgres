@@ -1,10 +1,10 @@
-import { Request, Response } from "express";
+import { NextFunction, Response } from "express";
 import { QueryTypes } from "sequelize";
 import sequelize from "../config/db";
 import { AuthenticatedRequest } from "../utils/type";
 
 // Add item to cart
-export const addToCart = async (req: AuthenticatedRequest, res: Response) => {
+export const addToCart = async (req: AuthenticatedRequest, res: Response,next:NextFunction) => {
     const { product_id, quantity } = req.body;
 
     try {
@@ -21,12 +21,12 @@ export const addToCart = async (req: AuthenticatedRequest, res: Response) => {
 
         res.status(201).json({ message: "Item added to cart" });
     } catch (error) {
-        res.status(500).json({ message: "Error adding to cart", error: (error as Error).message });
+        next(error);
     }
 };
 
 // View cart items
-export const getCart = async (req: AuthenticatedRequest, res: Response) => {
+export const getCart = async (req: AuthenticatedRequest, res: Response,next:NextFunction) => {
     try {
         const cartItems = await sequelize.query(
             `SELECT cart.id, cart.quantity, 
@@ -41,12 +41,12 @@ export const getCart = async (req: AuthenticatedRequest, res: Response) => {
 
         res.json(cartItems);
     } catch (error) {
-        res.status(500).json({ message: "Error fetching cart", error: (error as Error).message });
+        next(error);
     }
 };
 
 // Remove item from cart
-export const removeFromCart = async (req: AuthenticatedRequest, res: Response): Promise<any> => {
+export const removeFromCart = async (req: AuthenticatedRequest, res: Response,next:NextFunction): Promise<any> => {
     const { product_id } = req.query;
 
     try {
@@ -80,15 +80,14 @@ export const removeFromCart = async (req: AuthenticatedRequest, res: Response): 
             return res.json({ message: "Item removed from cart" });
         }
     } catch (error) {
-        console.error("Error removing item:", error);
-        res.status(500).json({ message: "Error removing item", error: (error as Error).message });
+        next(error);
     }
 };
 
 
 
 // Clear cart for a user
-export const clearCart = async (req: AuthenticatedRequest, res: Response): Promise<any> => {
+export const clearCart = async (req: AuthenticatedRequest, res: Response,next:NextFunction): Promise<any> => {
     try {
         const [existing] = await sequelize.query(
             `SELECT id FROM cart WHERE user_id = $1`,
@@ -106,6 +105,6 @@ export const clearCart = async (req: AuthenticatedRequest, res: Response): Promi
 
         res.json({ message: "Cart cleared successfully" });
     } catch (error) {
-        res.status(500).json({ message: "Error clearing cart", error: (error as Error).message });
+        next(error);
     }
 };

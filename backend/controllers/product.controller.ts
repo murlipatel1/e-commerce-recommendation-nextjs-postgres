@@ -1,10 +1,10 @@
-import {Response } from "express";
+import {NextFunction, Response } from "express";
 import { QueryTypes } from "sequelize";
 import sequelize from "../config/db";
 import { AuthenticatedRequest } from "../utils/type";
 
 // Create Product (Admin only)
-export const creatProduct = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+export const creatProduct = async (req: AuthenticatedRequest, res: Response,next:NextFunction): Promise<void> => {
     if (req.user?.role !== "admin") {
         res.status(403).json({ message: "Unauthorized" });
         return;
@@ -23,12 +23,12 @@ export const creatProduct = async (req: AuthenticatedRequest, res: Response): Pr
         );
         res.status(201).json(result[0]);
     } catch (error) {
-        res.status(500).json({ message: "Error adding product", error: (error as Error).message });
+        next(error);
     }
 };
 
 // Get All Products
-export const getAllProducts = async (req:AuthenticatedRequest, res:Response) => {
+export const getAllProducts = async (req:AuthenticatedRequest, res:Response,next:NextFunction) => {
     try {
         const result = await sequelize.query("SELECT * FROM products", {
             type: QueryTypes.SELECT
@@ -55,7 +55,7 @@ export const getProductById= async (req: AuthenticatedRequest, res: Response): P
 };
 
 // Delete Product (Admin only)
-export const deleteProduct= async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+export const deleteProduct= async (req: AuthenticatedRequest, res: Response,next:NextFunction): Promise<void> => {
     if (req.user?.role !== "admin") res.status(403).json({ message: "Unauthorized" });
 
     try {
@@ -65,12 +65,12 @@ export const deleteProduct= async (req: AuthenticatedRequest, res: Response): Pr
         });
         res.json({ message: "Product deleted successfully" });
     } catch (error) {
-        res.status(500).json({ message: "Error deleting product", error: (error as Error).message });
+        next(error);
     }
 };
 
 // Update Product (Admin only)
-export const updateProduct = async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+export const updateProduct = async (req: AuthenticatedRequest, res: Response,next:NextFunction): Promise<void> => {
     if (req.user?.role !== "admin") res.status(403).json({ message: "Unauthorized" });
 
     const { name, description, price, stock, category, photo_url } = req.body;
@@ -85,6 +85,6 @@ export const updateProduct = async (req: AuthenticatedRequest, res: Response): P
         );
         res.json({ message: "Product updated successfully" });
     } catch (error) {
-        res.status(500).json({ message: "Error updating product", error: (error as Error).message });
+        next(error);
     }
 };

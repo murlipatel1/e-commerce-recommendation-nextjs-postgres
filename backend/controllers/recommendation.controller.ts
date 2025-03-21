@@ -1,10 +1,10 @@
-import { Response } from "express";
+import { NextFunction, Response } from "express";
 import { QueryTypes } from "sequelize";
 import sequelize from "../config/db";
 import { AuthenticatedRequest } from "../utils/type";
 
 // Get Recommended Products for a User
-export const getRecommendationById= async (req: AuthenticatedRequest, res: Response) => {
+export const getRecommendationById= async (req: AuthenticatedRequest, res: Response,next:NextFunction) => {
     try {
         const result = await sequelize.query(
             "SELECT * FROM recommendations WHERE user_id = $1",
@@ -15,12 +15,12 @@ export const getRecommendationById= async (req: AuthenticatedRequest, res: Respo
         );
         res.json(result);
     } catch (error) {
-        res.status(500).json({ message: "Error fetching recommendations", error: (error as Error).message });
+        next(error);
     }
 };
 
 // Add/Update Recommendations based on category visits
-export const updateRecommendationById = async (req: AuthenticatedRequest, res: Response) => {
+export const updateRecommendationById = async (req: AuthenticatedRequest, res: Response,next:NextFunction) => {
     const { category, product_id } = req.body;
 
     try {
@@ -55,6 +55,6 @@ export const updateRecommendationById = async (req: AuthenticatedRequest, res: R
 
         res.json({ message: "Recommendation updated successfully" });
     } catch (error) {
-        res.status(500).json({ message: "Error updating recommendation", error: (error as Error).message });
+        next(error);
     }
 };
