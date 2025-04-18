@@ -8,13 +8,23 @@ import { PDFDownloadLink, Document, Page, Text, View, StyleSheet, Image } from '
 import { toPng } from 'html-to-image';
 
 const styles = StyleSheet.create({
-  page: { padding: 30 },
-  section: { marginBottom: 20 },
+  page: { padding: 30, position: 'relative' },
+  watermark: {
+    position: 'absolute',
+    top: '40%',
+    left: '20%',
+    fontSize: 60,
+    color: 'rgba(150,150,150,0.3)',
+    transform: 'rotate(-45deg)',
+  },
+  section: { marginBottom: 20, paddingBottom: 10, borderBottom: '1 solid #ccc' },
   heading: { fontSize: 18, marginBottom: 10 },
-  heading1: { fontSize: 24, marginBottom
-: 10 },
   text: { fontSize: 12 },
-  image: { padding: 50  },
+  chartImage: { marginVertical: 10, width: '100%', height: 250 },
+  table: {width: 'auto', borderStyle: 'solid', borderWidth: 1, borderColor: '#bfbfbf', marginTop: 10 },
+  tableRow: { flexDirection: 'row' },
+  tableColHeader: { width: '50%', borderStyle: 'solid', borderWidth: 1, borderColor: '#000', backgroundColor: '#e0e0e0', padding: 4 },
+  tableCol: { width: '50%', borderStyle: 'solid', borderWidth: 1, borderColor: '#bfbfbf', padding: 4 },
 });
 
 interface MyDocumentProps {
@@ -36,45 +46,96 @@ interface MyDocumentProps {
 const MyDocument = ({ salesData, userRegistrations, productPerformance, orderStats, recommendationsData, charts }: MyDocumentProps) => (
   <Document>
     <Page style={styles.page}>
+      <Text style={styles.watermark}>Ecommerce Store</Text>
+      
       <View style={styles.section}>
-      <Text style={styles.heading1}>Admin Dashboard</Text>
         <Text style={styles.heading}>Sales Data</Text>
-        <Image src={charts.salesChart} style={styles.image} />
-        {salesData.map((data) => (
-          <Text key={data.date} style={styles.text}>{`${data.date}: $${data.total}`}</Text>
-        ))}
+        <Image src={charts.salesChart} style={styles.chartImage} />
+        <View style={styles.table}>
+          <View style={styles.tableRow}>
+            <Text style={styles.tableColHeader}>Date</Text>
+            <Text style={styles.tableColHeader}>Total ($)</Text>
+          </View>
+          {salesData.map(data => (
+            <View style={styles.tableRow} key={data.date}>
+              <Text style={styles.tableCol}>{data.date}</Text>
+              <Text style={styles.tableCol}>{data.total}</Text>
+            </View>
+          ))}
+        </View>
       </View>
+      
       <View style={styles.section}>
         <Text style={styles.heading}>User Registrations</Text>
-        <Image src={charts.userRegistrationsChart} style={styles.image} />
-        {userRegistrations.map((data) => (
-          <Text key={data.date} style={styles.text}>{`${data.date}: ${data.count} users`}</Text>
-        ))}
+        <Image src={charts.userRegistrationsChart} style={styles.chartImage} />
+        <View style={styles.table}>
+          <View style={styles.tableRow}>
+            <Text style={styles.tableColHeader}>Date</Text>
+            <Text style={styles.tableColHeader}>Registrations</Text>
+          </View>
+          {userRegistrations.map(data => (
+            <View style={styles.tableRow} key={data.date}>
+              <Text style={styles.tableCol}>{data.date}</Text>
+              <Text style={styles.tableCol}>{data.count}</Text>
+            </View>
+          ))}
+        </View>
       </View>
+
       <View style={styles.section}>
         <Text style={styles.heading}>Product Performance</Text>
-        <Image src={charts.productPerformanceChart} style={styles.image} />
-        {productPerformance.map((data) => (
-          <Text key={data.productname} style={styles.text}>{`${data.productname}: ${data.total_reviews} reviews, Average Rating: ${data.average_rating}`}</Text>
-        ))}
+        <Image src={charts.productPerformanceChart} style={styles.chartImage} />
+        <View style={styles.table}>
+          <View style={styles.tableRow}>
+            <Text style={styles.tableColHeader}>Product</Text>
+            <Text style={styles.tableColHeader}>Reviews / Avg Rating</Text>
+          </View>
+          {productPerformance.map(data => (
+            <View style={styles.tableRow} key={data.productname}>
+              <Text style={styles.tableCol}>{data.productname}</Text>
+              <Text style={styles.tableCol}>{data.total_reviews} / {data.average_rating}</Text>
+            </View>
+          ))}
+        </View>
       </View>
+
       <View style={styles.section}>
         <Text style={styles.heading}>Order Status</Text>
-        <Image src={charts.orderStatsChart} style={styles.image} />
-        {orderStats.map((data) => (
-          <Text key={data.status} style={styles.text}>{`${data.status}: ${data.count} orders`}</Text>
-        ))}
+        <Image src={charts.orderStatsChart} style={styles.chartImage} />
+        <View style={styles.table}>
+          <View style={styles.tableRow}>
+            <Text style={styles.tableColHeader}>Status</Text>
+            <Text style={styles.tableColHeader}>Count</Text>
+          </View>
+          {orderStats.map(data => (
+            <View style={styles.tableRow} key={data.status}>
+              <Text style={styles.tableCol}>{data.status}</Text>
+              <Text style={styles.tableCol}>{data.count}</Text>
+            </View>
+          ))}
+        </View>
       </View>
+
       <View style={styles.section}>
         <Text style={styles.heading}>Recommendations</Text>
-        <Image src={charts.recommendationsChart} style={styles.image} />
-        {recommendationsData.map((data) => (
-          <Text key={data.category} style={styles.text}>{`${data.category}: ${data.total_recommendations} recommendations`}</Text>
-        ))}
+        <Image src={charts.recommendationsChart} style={styles.chartImage} />
+        <View style={styles.table}>
+          <View style={styles.tableRow}>
+            <Text style={styles.tableColHeader}>Category</Text>
+            <Text style={styles.tableColHeader}>Count</Text>
+          </View>
+          {recommendationsData.map(data => (
+            <View style={styles.tableRow} key={data.category}>
+              <Text style={styles.tableCol}>{data.category}</Text>
+              <Text style={styles.tableCol}>{data.total_recommendations}</Text>
+            </View>
+          ))}
+        </View>
       </View>
+
       <View style={styles.section}>
         <Text style={styles.heading}>Product Ratings</Text>
-        <Image src={charts.productRatingsChart} style={styles.image} />
+        <Image src={charts.productRatingsChart} style={styles.chartImage} />
       </View>
     </Page>
   </Document>
