@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
@@ -10,10 +10,6 @@ export function NavBar() {
   const pathname = usePathname();
   const router = useRouter();
   const { user, logout } = useAuth();
-
-  useEffect(() => {
-    // console.log('Current user:', user);
-  }, [user]);
 
   const handleLogout = async () => {
     try {

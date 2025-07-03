@@ -12,7 +12,7 @@ export default function Home() {
   }, [user]);
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 bg-white text-gray-900 min-h-screen">
       {/* Hero Section */}
       <div className="relative bg-white overflow-hidden">
         <div className="max-w-7xl mx-auto">

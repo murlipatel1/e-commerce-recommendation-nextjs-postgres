@@ -132,7 +132,7 @@ export default function ProductsPage() {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 bg-white text-gray-900 min-h-screen">
       <h1 className="text-2xl font-bold mb-6">Products</h1>
       <div className="mb-4 flex justify-between items-center">
         <span className="text-lg font-semibold">
@@ -148,7 +148,7 @@ export default function ProductsPage() {
           <select
             value={selectedCategory || ""}
             onChange={(e) => handleCategoryChange(e.target.value || null)}
-            className="w-full px-3 py-2 border rounded text-black"
+            className="w-full px-3 py-2 border rounded text-gray-900 bg-white border-gray-300 focus:border-blue-400 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
           >
             <option value="">All Categories</option>
             {[...new Set(products.map((product) => product.category))].map((category) => (
@@ -164,7 +164,7 @@ export default function ProductsPage() {
             type="text"
             value={searchTerm}
             onChange={handleSearchChange}
-            className="w-full px-3 py-2 border rounded text-black"
+            className="w-full px-3 py-2 border rounded text-gray-900 bg-white border-gray-300 focus:border-blue-400 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
             placeholder="Search products..."
           />
         </div>
@@ -178,8 +178,14 @@ export default function ProductsPage() {
             value={priceRange}
             onChange={handlePriceRangeChange}
             className="mb-4"
+            trackStyle={[{ backgroundColor: '#3b82f6' }]}
+            handleStyle={[
+              { borderColor: '#3b82f6', backgroundColor: '#fff' },
+              { borderColor: '#3b82f6', backgroundColor: '#fff' }
+            ]}
+            railStyle={{ backgroundColor: '#e5e7eb' }}
           />
-          <div className="flex justify-between text-sm text-white ">
+          <div className="flex justify-between text-sm text-gray-700 ">
             <span>${priceRange[0]}</span>
             <span>${priceRange[1]}</span>
           </div>
